@@ -9,5 +9,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vincent23032003/webTech.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Vincent23032003/webTech/issues"
+  },
+  "homepage": "https://github.com/Vincent23032003/webTech#readme",
   "description": ""
 }

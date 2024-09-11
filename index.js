@@ -1,14 +1,33 @@
 // Import a module
 const http = require('http')
 
-// Declare an http server
-http.createServer(function (req, res) {
+ 
+// Import Node url module
+const url = require('url')
+const qs = require('querystring')
 
-  // Write a response header
-  res.writeHead(200, {'Content-Type': 'text/plain'});
+  // Define a string constant concatenating strings
+const content = '<!DOCTYPE html>' +
+'<html>' +
+'    <head>' +
+'        <meta charset="utf-8" />' +
+'        <title>ECE AST</title>' +
+'    </head>' + 
+'    <body>' +
+'       <p>Hello World!</p>' +
+'    </body>' +
+'</html>'
 
-  // Write a response content
-  res.end('Hello World\n');
+    
+  const serverHandle = function (req, res) {
+    // Retrieve and print the queryParams
+    const queryParams = qs.parse(url.parse(req.url).query);
+    console.log(queryParams);
+  
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(content);
+    res.end();
+  }
 
-// Start the server
-}).listen(8080)
+  const server = http.createServer(serverHandle);
+  server.listen(8080)
