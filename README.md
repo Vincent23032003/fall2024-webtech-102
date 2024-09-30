@@ -13,7 +13,7 @@ This first lab aims to create a simple node.js script and a simple HTTP server u
 ## How to use it ?
 
 To start the http server with nodemon, run this command in your terminal :
-> npm run develop 
+> 'npm run develop' 
 
 ## Contributors
 
