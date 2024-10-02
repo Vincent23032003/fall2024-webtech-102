@@ -1,11 +1,25 @@
-// Import modules
-const http = require('http');
-const handles = require('./handles');
+// src/routes/index.js
 
-// Create an HTTP server and pass the handler function from handles.js
-const server = http.createServer(handles.serverHandle);
+const express = require('express');
+const router = express.Router();
+const db = require('../models/db'); // Importer le modèle de base de données
 
-// Start the server on port 8080
-server.listen(8080, () => {
-  console.log('Server listening on port 8080');
+// Route pour la racine
+router.get('/', (req, res) => {
+    res.send('Bienvenue sur l\'API des articles et commentaires!');
 });
+
+// Route pour obtenir tous les articles
+router.get('/articles', (req, res) => {
+    res.json(db.articles);
+});
+
+// Route pour obtenir les commentaires d'un article spécifique
+router.get('/articles/:id/comments', (req, res) => {
+    const { id } = req.params;
+    const commentsForArticle = db.comments.filter(comment => comment.articleId === id);
+    res.json(commentsForArticle);
+});
+
+module.exports = router;
+
