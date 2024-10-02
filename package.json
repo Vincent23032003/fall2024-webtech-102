@@ -20,8 +20,9 @@
   "homepage": "https://github.com/Vincent23032003/webTech#readme",
   "description": "",
   "dependencies": {
+    "express": "^4.21.0"
   },
   "devDependecies": {
-  	"nodemon": "^3.1.4"
+    "nodemon": "^3.1.4"
   }
 }
