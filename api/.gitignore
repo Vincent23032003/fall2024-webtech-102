@@ -1,2 +1,6 @@
 node_modules/
+<<<<<<< Updated upstream:api/.gitignore
 .env
+=======
+.next/
+>>>>>>> Stashed changes:.gitignore
