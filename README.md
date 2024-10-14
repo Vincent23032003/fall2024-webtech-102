@@ -16,10 +16,10 @@ This project will be updated weekly with new features in order to have a complet
 
 1. Create a folder
     ```bash
-    mkdir *folder name*
+    mkdir folder_name
 2. Go to this folder
     ```bash
-    cd *folder name*
+    cd folder_name
 3. Clone the repository to this folder
    ```bash
    git clone https://github.com/Vincent23032003/fall2024-webtech-102.git
