@@ -2,18 +2,31 @@
 
 ## Introduction
 
-This project will be updated weekly with new features
-This first lab aims to create a simple node.js script and a simple HTTP server using nodemon in order to publish it in git.
+This is backend part of the project. In this part you can find all APIs and server stuff necessary of the smooth running of the project. It will be updated weekly.
 
 ## Prerequisites
 
-- Install node.js
-- Install git
+-  Install git
+-  Install node.js
+    - https://nodejs.org/en/download/package-manager
+- Install Express
+    - https://www.npmjs.com/package/express#installation
 
 ## How to use it ?
 
-To start the http server with nodemon, run this command in your terminal :
-> `npm run develop` 
+1. Create an api folder
+    ```bash
+    mkdir api
+2. Go to this folder
+    ```bash
+    cd api
+3. Run the application 
+   ```bash
+   npm run develop
+4. Open your localhost on a web browser
+    ```bash
+    http://localhost:3000
+
 
 ## Contributors
 
