@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
         <header>
           <h1>Welcome to My Web Technologies Project</h1>
           <nav>
-            <ul className="navbar">
+            <ul>
               <li>
                 <Link href="/">
                   Home
