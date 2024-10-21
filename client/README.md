@@ -26,8 +26,3 @@ This is frontend part of the project. In this part you can find all web pages th
 4. Open your localhost on a web browser
     ```bash
     http://localhost:3000
-
-## Contributors
-
-- Vincent BARE : vincent.bare@edu.ece.fr
-- Jules FEDIT : jules.fedit@edu.ece.fr
