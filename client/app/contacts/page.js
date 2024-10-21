@@ -14,7 +14,7 @@ export default function Page() {
                 </li>
                 <li>
                     <Link href="mailto:vincent.bare@edu.ece.fr">
-                        Contactez Vincent !
+                        Contact Vincent !
                     </Link>
                 </li>
                 <br></br>
@@ -23,7 +23,7 @@ export default function Page() {
                 </li>
                 <li>
                     <Link href="mailto:jules.fedit@edu.ece.fr">
-                        Contactez Jules !
+                        Contact Jules !
                     </Link>
                 </li>
               </ul>

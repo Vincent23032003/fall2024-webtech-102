@@ -9,35 +9,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {/* Header Section with Navigation Bar */}
-        <header>
-          <h1>Welcome to My Web Technologies Project</h1>
-          <nav>
-            <ul>
-              <li>
-                <Link href="/">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/articles">
-                  Articles
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </header>
-
         {/* Main content will go here */}
         <main>{children}</main>
 
