@@ -11,10 +11,13 @@
   },
   "keywords": [],
   "author": "Vincent BARE",
-  "contributors": ["Jules FEDIT"],
+  "contributors": [
+    "Jules FEDIT"
+  ],
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@swc/helpers": "^0.5.13",
     "next": "^14.2.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
