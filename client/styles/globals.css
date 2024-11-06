@@ -6,5 +6,18 @@
     @apply text-5xl font-bold underline mb-10;
 }
 
+@font-face {
+    font-family: "Futura Condensed";
+    src: url(../public/assets/Futura_Condensed.ttf);
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Futura Condensed";
+    src: url(../public/assets/Futura_Condensed_Bold.otf);
+    font-weight: bold;
+    font-style: normal;
+}
+
 
   

@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        custom:["Futura_Condensed", "sans-serif"],
+        custom_bold:["Futura_Condensed_Bold", "sans-serif"]
+      }
     },
   },
   plugins: [
