@@ -79,10 +79,6 @@ export default function Page() {
             </div>
         </form>
     );
-<<<<<<< HEAD
-}
-=======
 
 }
 
->>>>>>> fe4cb15d5dff5c85b62d754863ff05ce50ae469f
