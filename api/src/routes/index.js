@@ -1,49 +1,16 @@
-const express = require('express');
+import express from "express";
+import { createUser, getUsers, getUserById } from "./users/index.js"; // Import des routes d'utilisateurs
+
 const router = express.Router();
-const db = require('../models/db');
 
-// Route pour la page d'accueil
-router.get('/', (req, res) => {
-    res.send('Bienvenue sur l\'API des articles et commentaires!');
+// Route de test pour vérifier si l'API fonctionne
+router.get("/", (req, res) => {
+  res.status(200).send("API is working!");
 });
 
-// Route pour obtenir tous les articles
-router.get('/articles', (req, res) => {
-    res.json(db.articles);
-});
+// Routes utilisateur
+router.post("/users", createUser);  // Créer un utilisateur
+router.get("/users", getUsers);     // Obtenir tous les utilisateurs
+router.get("/users/:id", getUserById); // Obtenir un utilisateur par ID
 
-// Route pour obtenir un article spécifique par ID
-router.get('/articles/:id', (req, res) => {
-    const { id } = req.params;
-    const article = db.articles.find(article => article.id === id);
-    if (article) {
-        res.json(article);
-    } else {
-        res.status(404).send('Article non trouvé');
-    }
-});
-
-// Route pour ajouter un nouvel article
-router.post('/articles', (req, res) => {
-    const newArticle = req.body;
-    db.articles.push(newArticle);
-    res.status(201).send('Article ajouté');
-});
-
-// Route pour obtenir les commentaires d'un article spécifique
-router.get('/articles/:id/comments', (req, res) => {
-    const { id } = req.params;
-    const commentsForArticle = db.comments.filter(comment => comment.articleId === id);
-    res.json(commentsForArticle);
-});
-
-// Route pour ajouter un nouveau commentaire à un article
-router.post('/articles/:id/comments', (req, res) => {
-    const { id } = req.params;
-    const newComment = req.body;
-    newComment.articleId = id;
-    db.comments.push(newComment);
-    res.status(201).send('Commentaire ajouté');
-});
-
-module.exports = router;
+export default router;

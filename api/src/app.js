@@ -1,23 +1,24 @@
-const express = require('express');
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors"; // Si tu veux permettre des requêtes cross-origin (par exemple, entre le frontend et le backend)
+import router from "./routes"; // Importer les routes définies plus haut
+import { checkAdmin, checkUserRole } from "./middlewares/roleMiddleware"; // Middlewares
+
 const app = express();
-const path = require('path');
-const routes = require('./routes/index');
 
-// Middleware pour analyser les requêtes JSON
-app.use(express.json());
+// Middleware global
+app.use(cors()); // Autorise les requêtes provenant de ton frontend
+app.use(bodyParser.json()); // Pour parser le corps des requêtes en JSON
 
-// Servir le frontend depuis le dossier CLIENTS
-app.use(express.static(path.join(__dirname, '../../CLIENTS')));
+// Utilisation des routes
+app.use("/api", router);
 
-// Utilisation des routes pour l'API
-app.use('/api', routes);
+// Utiliser un middleware spécifique si nécessaire
+// Par exemple, pour une route admin uniquement
+app.use("/admin", checkAdmin, router);
 
-// Démarrer le serveur
-const PORT = process.env.PORT || 3000;
+// Lancer le serveur
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
-
-const registerRoute = require('./routes/register');
-
-app.use('/api/register', registerRoute);
