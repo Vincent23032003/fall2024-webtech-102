@@ -23,6 +23,7 @@ model User {
   id         String    @id @default(uuid()) @db.Uuid
   email      String    @unique
   fullName   String
+  password   String    // Mot de passe de l'utilisateur
   avatarUrl  String?
   role       UserRole  @default(USER)
   settings   Json?     // Pour stocker les préférences utilisateur
@@ -38,6 +39,7 @@ model User {
 
   @@map("users")
 }
+
 
 model Post {
   id          String    @id @default(uuid())

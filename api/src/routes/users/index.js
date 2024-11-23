@@ -1,32 +1,44 @@
 import prisma from "../../models/prismaClient";
 
 // Créer un nouvel utilisateur
-export const createUser = async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
+// api/src/routes/users/index.js
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const prisma = require('../../models/prismaClient');
 
-  const { email, fullName, avatarUrl, role = "USER" } = req.body;
+const router = express.Router();
 
-  if (!email || !fullName) {
-    return res.status(400).json({ error: "Missing fields" });
+// Route pour enregistrer un nouvel utilisateur
+router.post('/', async (req, res) => {
+  const { email, fullName, password } = req.body;
+
+  // Vérification des champs requis
+  if (!email || !fullName || !password) {
+    return res.status(400).json({ error: 'Tous les champs sont requis.' });
   }
 
   try {
-    const user = await prisma.user.create({
+    // Hachage du mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Création de l'utilisateur dans la base de données
+    const newUser = await prisma.user.create({
       data: {
         email,
         fullName,
-        avatarUrl,
-        role, // Peut être "USER" ou "ADMIN"
+        password: hashedPassword, // Sauvegarder le mot de passe haché
       },
     });
-    res.status(201).json({ message: "User created", user });
+
+    return res.status(201).json({ message: 'Utilisateur créé avec succès', user: newUser });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error creating user" });
+    return res.status(500).json({ error: 'Erreur interne du serveur.' });
   }
-};
+});
+
+module.exports = router;
+
 
 // Récupérer tous les utilisateurs
 export const getUsers = async (req, res) => {

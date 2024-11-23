@@ -1,26 +1,24 @@
 // client/services/userService.ts
 
 // Fonction pour créer un utilisateur
-export const createUser = async (email: string, fullName: string, avatarUrl: string, role: string) => {
-    try {
-      const response = await fetch("/api/users", {
-        method: "POST",
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export const createUser = async (email: string, password: string, fullName: string) => {
+    const response = await fetch(`${BASE_URL}/users`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, fullName, avatarUrl, role }),
-      });
-  
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Erreur lors de la création de l'utilisateur");
-      }
-  
-      return await response.json();  // Renvoie l'utilisateur créé
-    } catch (error) {
-      throw error;
+        body: JSON.stringify({ email, password, fullName }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to create user');
     }
-  };
+
+    return await response.json();
+};
+
   
   // Fonction pour récupérer tous les utilisateurs
   export const getUsers = async () => {
