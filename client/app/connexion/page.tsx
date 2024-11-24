@@ -2,105 +2,127 @@
 
 import Link from 'next/link';
 import React from 'react';
-import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { supabase } from "../../supabaseClient";
+import { useRouter } from "next/navigation";
 
-export default function Page() {
-    const router = useRouter();
-    const supabase = createClientComponentClient();
-    const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState({
-        email: '',
-        password: '',
-    });
+const ConnexionPage = () => {
+  const router = useRouter();
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setData((prevData) => ({
-            ...prevData,
-            [name]: value,  // Correction ici : value au lieu de data
-        }));
-    };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setError(null); // Réinitialiser les erreurs
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-        try {
-            const { data: signInData, error } = await supabase.auth.signInWithPassword({
-                email: data.email,
-                password: data.password,
-            });
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-            if (error) {
-                setError('Connexion échouée : Email ou mot de passe incorrect');
-            } else {
-                // Connexion réussie
-                alert('Connexion réussie !');
-                // Rediriger vers la page d'accueil ou le dashboard
-                router.push('/dashboard'); // Remplacez '/dashboard' par votre route souhaitée
-            }
-        } catch (error) {
-            setError('Une erreur s\'est produite lors de la connexion');
-        }
-    };
+    try {
+      setError(null);
+      setSuccess(false);
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <div className="flex justify-center p-6">
-                <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    {error && (
-                        <div className="mb-4 p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                            {error}
-                        </div>
-                    )}
-                    <label htmlFor="email" className="block mb-2 font-custom text-sm text-gray-900 dark:text-white">Your Email</label>
-                    <div className="flex">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z" />
-                                <path d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z" />
-                            </svg>
-                        </span>
-                        <input 
-                            type="email"
-                            name="email" 
-                            id="email"
-                            value={data.email} 
-                            onChange={handleChange} 
-                            required 
-                            className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                            placeholder="example@example.com" 
-                        />
-                    </div>
-                    <label htmlFor="password" className="block mb-2 font-custom text-sm text-gray-900 dark:text-white">Password</label>
-                    <div className="flex">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                <path fillRule="evenodd" d="M8 10V7a4 4 0 1 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2-3a2 2 0 1 1 4 0v3h-4V7Zm2 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clipRule="evenodd" />
-                            </svg>
-                        </span>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            id="password"
-                            value={data.password} 
-                            onChange={handleChange}
-                            required 
-                            className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                        />
-                    </div>
-                    <div className="w-full text-center p-6">
-                        <button type="submit" className="block w-full font-custom text-white hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:outline-none font-medium rounded-lg px-5 py-1 text-base text-center me-2 mb-2 mr-2.5">
-                            Submit
-                        </button>
-                        <Link href="/create_account" className="block w-full font-custom text-white hover:text-yellow-400 hover:underline">
-                            Create your account
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </form>
-    );
-}
+      if (!email.includes("@")) {
+        setError("Email invalide.");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      console.log("Data:", data);
+      console.log("Error:", error);
+
+      if (error) {
+        setError("Email ou mot de passe incorrect.");
+        return;
+      }
+
+      setSuccess(true);
+      setEmail("");
+      setPassword("");
+
+      router.push("/"); // Redirection après connexion
+    } catch (err: any) {
+      setError("Une erreur est survenue.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        Connexion
+      </h1>
+
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Votre email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            required
+          />
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            Mot de passe
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Votre mot de passe"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Connexion en cours..." : "Se connecter"}
+        </button>
+      </form>
+
+      {success && (
+        <p className="mt-4 text-green-600 text-center">
+          Connexion réussie ! Vous êtes maintenant connecté.
+        </p>
+      )}
+
+      {error && (
+        <p className="mt-4 text-red-600 text-center">
+          {error}
+        </p>
+      )}
+
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600 mb-2">
+          Vous n'avez pas de compte ?
+        </p>
+        <Link href="/create_account" className="w-full bg-gray-100 text-blue-600 py-2 px-4 rounded-md hover:bg-gray-200 inline-block">
+          Créer un compte
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default ConnexionPage;

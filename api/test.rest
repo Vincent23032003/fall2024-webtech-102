@@ -1,0 +1,9 @@
+POST http://localhost:3000/routes/users
+
+Content-Type: application/json
+
+{
+    "email": "vince_bare@yahoo.fr",
+    "password": "vincent",
+    "fullName" : "vinceLeMagnifique"
+}
