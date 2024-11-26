@@ -1,6 +1,7 @@
 // app/articles/page.tsx
 import { supabase } from '../../utils/supabaseClient'
 import Link from 'next/link'
+import React from 'react'
 
 async function getArticles() {
   try {

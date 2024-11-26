@@ -1,4 +1,3 @@
-// app/blog/page.tsx
 import React from 'react';
 
 export const revalidate = 60;  // Optionnel : mettez `false` pour ne jamais régénérer automatiquement.

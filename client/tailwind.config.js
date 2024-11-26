@@ -17,5 +17,6 @@ module.exports = {
     //require('tailwindcss-font-inter'), // Plugin pour la police Inter
     //require('@tailwindcss/typography'), // Plugin pour la typographie
     //r//equire('@tailwindcss/forms'), // Plugin pour les formulaires
+    require('tailwindcss-animated')
   ],
 }
