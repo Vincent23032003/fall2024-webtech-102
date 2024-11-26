@@ -1,3 +1,4 @@
+//client/app/connexion/page.tsx :
 "use client"
 
 import Link from 'next/link';
@@ -17,36 +18,50 @@ const ConnexionPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     if (isSubmitting) return;
     setIsSubmitting(true);
-
+  
     try {
       setError(null);
       setSuccess(false);
-
+  
       if (!email.includes("@")) {
         setError("Email invalide.");
         return;
       }
-
+  
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
+  
       console.log("Data:", data);
       console.log("Error:", error);
-
+  
       if (error) {
         setError("Email ou mot de passe incorrect.");
         return;
       }
-
+  
+      // Utiliser `supabase.auth.getUser()` pour récupérer l'utilisateur connecté
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+  
+      if (userError) {
+        setError("Erreur lors de la récupération des données de l'utilisateur.");
+        return;
+      }
+  
+      // Vérifier si userData contient un utilisateur
+      if (userData && userData.user) {
+        console.log("ID de l'utilisateur connecté :", userData.user.id); // Accéder à l'ID de l'utilisateur
+        // Tu peux maintenant utiliser `userData.user.id` pour effectuer des actions spécifiques à cet utilisateur
+      }
+  
       setSuccess(true);
       setEmail("");
       setPassword("");
-
+  
       router.push("/"); // Redirection après connexion
     } catch (err: any) {
       setError("Une erreur est survenue.");
@@ -54,6 +69,7 @@ const ConnexionPage = () => {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
