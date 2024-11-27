@@ -79,11 +79,11 @@ export default function BlogPage() {
                   {article.like} J'aime
                 </button>
                 <button
-                  onClick={() => router.push(`/article/${article.id}`)}
-                  className="text-white bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600"
-                >
-                  Read the article
-                </button>
+                onClick={() => router.push(`/articles/${article.id}`)}
+                className="text-white bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600"
+              >
+                Read the article
+              </button>
 
               </div>
             </div>
