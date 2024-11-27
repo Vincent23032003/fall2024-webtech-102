@@ -11,7 +11,9 @@ const CreateAccountPage = () => {
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); // Empêche les clics multiples
@@ -56,7 +58,9 @@ const CreateAccountPage = () => {
           {
             id: user.id, // ID généré par Supabase
             email,
-            fullName,
+            username,
+            firstName,
+            lastName,
             password: hashedPassword, // Mot de passe haché
             updatedAt: new Date(),
             createdAt: new Date(),
@@ -70,7 +74,9 @@ const CreateAccountPage = () => {
       setSuccess(true);
       setEmail("");
       setPassword("");
-      setFullName("");
+      setUsername("");
+      setFirstName("");
+      setLastName("");
 
       // Redirection vers la page de connexion après succès
       router.push("/connexion");
@@ -87,6 +93,20 @@ const CreateAccountPage = () => {
       <form onSubmit={handleSubmit}>
         {/* Champ pour le nom complet */}
         <div className="mb-4">
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="Momo"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)} // Met à jour uniquement `firstName`
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            required
+          />
+        </div>
+        <div className="mb-4">
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
             First Name
           </label>
@@ -94,29 +114,28 @@ const CreateAccountPage = () => {
             id="firstName"
             type="text"
             placeholder="Morgan"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)} // Met à jour uniquement `firstName`
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             required
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-            Last Name
-          </label>
-          <input
-            id="lastName"
-            type="text"
-            placeholder="Parra"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            required
-          />
-        </div>
+        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+          Last Name
+        </label>
+        <input
+          id="lastName"
+          type="text"
+          placeholder="Parra"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)} // Met à jour uniquement `lastName`
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          required
+        />
+      </div>
 
-        {/* Champ pour l'email */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="date" className="block text-sm font-medium text-gray-700">
             Date of birth
           </label>
@@ -129,7 +148,7 @@ const CreateAccountPage = () => {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             required
           />
-        </div>
+        </div> */}
         <div className="mb-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
