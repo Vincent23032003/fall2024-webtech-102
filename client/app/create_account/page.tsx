@@ -87,13 +87,27 @@ const CreateAccountPage = () => {
       <form onSubmit={handleSubmit}>
         {/* Champ pour le nom complet */}
         <div className="mb-4">
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-            Nom complet
+          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+            First Name
           </label>
           <input
-            id="fullName"
+            id="firstName"
             type="text"
-            placeholder="Votre nom complet"
+            placeholder="Morgan"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+            Last Name
+          </label>
+          <input
+            id="lastName"
+            type="text"
+            placeholder="Parra"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
@@ -103,13 +117,27 @@ const CreateAccountPage = () => {
 
         {/* Champ pour l'email */}
         <div className="mb-4">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
+            Date of birth
+          </label>
+          <input
+            id="date"
+            type="date"
+            placeholder="morgan.parra@iloveASM.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            required
+          />
+        </div>
+        <div className="mb-4">
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
           </label>
           <input
             id="email"
             type="email"
-            placeholder="Votre email"
+            placeholder="morgan.parra@iloveASM.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
@@ -125,7 +153,7 @@ const CreateAccountPage = () => {
           <input
             id="password"
             type="password"
-            placeholder="Votre mot de passe"
+            placeholder="******"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"

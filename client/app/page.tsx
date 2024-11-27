@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import "aos/dist/aos.css";
 import AOS from "aos";
-import { supabase } from "../supabaseClient"; // Assurez-vous d'importer votre client Supabase
+import { supabase } from "../supabaseClient";
+
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null); // Stocker l'utilisateur dans l'état
@@ -57,27 +58,6 @@ export default function HomePage() {
           <p className="mb-6 text-lg font-normal text-white lg:text-xl sm:px-16 xl:px-48 animate-fade-left animate-delay-[400ms] dark:text-white">
             Here is the ASM website, the ultimate hub for the ultimate ASM fans! Stay connected with your ASM latest updates, engage with the community, and celebrate the spirit of the game together.
           </p>
-
-          {/* Affiche les informations de l'utilisateur si l'utilisateur est connecté */}
-          {user ? (
-            <div className="mt-4 text-lg text-white">
-              <p>Welcome, {user.email}</p>
-              {userDetails ? (
-                <div>
-                  <p>Your full name: {userDetails.name}</p>
-                  <p>Your user ID: {userDetails.id}</p>
-                  {/* Affiche d'autres informations que tu as dans la table 'users' */}
-                </div>
-              ) : (
-                <p>Loading user details...</p>
-              )}
-            </div>
-          ) : (
-            <div className="mt-4 text-lg text-red-600">
-              <p>You are not logged in.</p>
-            </div>
-          )}
-
           <div className="flex justify-center inline-block">
             <a
               href="/blog"
@@ -237,6 +217,26 @@ export default function HomePage() {
                           <span>27</span>
                         </div>
                       </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={4}>
+                      <div className="flex justify-between text-center bg-white text-gray-800 p-2 m-2 rounded-lg">
+                        <span className="text-lg font-bold">7</span>
+                        <span>Bayonne</span>
+                        <span>6</span>
+                        <span>26</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={4}>
+                      <div className="flex justify-between text-center bg-white text-gray-800 p-2 m-2 rounded-lg">
+                        <span className="text-lg font-bold">8</span>
+                        <span>Racing 92</span>
+                        <span>5</span>
+                        <span>22</span>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
