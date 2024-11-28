@@ -2,10 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient";
-import { getRandomValues } from "crypto";
 
 export default function SettingsPage() {
-
   const gravatarList = [
     "https://gravatar.com/avatar/fb6d18d4bb9824850e8dfbe24d87809a?s=400&d=robohash&r=x",
     "https://gravatar.com/avatar/a8bc016c863eebaa9c1f7d6a3599ed54?s=400&d=robohash&r=x",
@@ -15,15 +13,14 @@ export default function SettingsPage() {
     "https://gravatar.com/avatar/2d9d9ca28b140d6693f88f275237a02a?s=400&d=robohash&r=x",
     "https://gravatar.com/avatar/d80b64c1976ab3241189805dca72f004?s=400&d=robohash&r=x",
     "https://gravatar.com/avatar/6b8571d69aa7bb4aa21b7e370d6e6846?s=400&d=robohash&r=x",
-    "https://gravatar.com/avatar/a1c64b32bb2a092e17e439b8f58203b4?s=400&d=robohash&r=x"
-    // Ajoutez d'autres images ici
+    "https://gravatar.com/avatar/a1c64b32bb2a092e17e439b8f58203b4?s=400&d=robohash&r=x",
   ];
 
-  const [user, setUser] = useState<any>(null); // Utilisateur connecté
-  const [userDetails, setUserDetails] = useState<any>(null); // Détails utilisateur
-  const [formData, setFormData] = useState<any>({}); // Données du formulaire
+  const [user, setUser] = useState<any>(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [formData, setFormData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedAvatar, setSelectedAvatar] = useState(gravatarList[0]); // Avatar par défaut
+  const [selectedAvatar, setSelectedAvatar] = useState(gravatarList[0]);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
   const openLibrary = () => setIsLibraryOpen(true);
@@ -33,49 +30,63 @@ export default function SettingsPage() {
     setSelectedAvatar(avatar);
     setFormData((prevState: any) => ({
       ...prevState,
-      avatarUrl: avatar,  // Mettre à jour avatarUrl dans formData
+      avatarUrl: avatar,
     }));
     closeLibrary();
   };
 
-  // Récupérer l'utilisateur et ses détails
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/connexion"; // Rediriger vers la page de connexion
+  };
+
   useEffect(() => {
+    // Fonction pour récupérer l'utilisateur et ses détails supplémentaires
     const getUser = async () => {
       try {
+        // Récupère l'utilisateur connecté
         const { data: authData, error: authError } = await supabase.auth.getUser();
 
-        if (authError) {
-          console.error("Erreur lors de la récupération de l'utilisateur:", authError.message);
+        if (authError || !authData?.user) {
+          // Gestion propre des cas où aucune session n'est active
+          console.warn("Aucun utilisateur connecté ou session manquante.");
+          setUser(null);
         } else {
-          setUser(authData.user);
+          setUser(authData.user); // Stocke l'utilisateur dans l'état
 
-          if (authData.user) {
-            const { data, error } = await supabase
-              .from("users")
-              .select("*")
-              .eq("id", authData.user.id)
-              .single();
+          // Récupérer les détails de l'utilisateur depuis la table 'users'
+          const { data, error } = await supabase
+            .from("users") // Assurez-vous que votre table s'appelle 'users'
+            .select("*") // Sélectionner toutes les colonnes ou des colonnes spécifiques comme 'name', 'avatar', etc.
+            .eq("id", authData.user.id) // Filtrer par l'ID de l'utilisateur connecté
+            .single(); // On prend seulement un utilisateur, car il est censé être unique
 
-            if (error) {
-              console.error("Erreur lors de la récupération des détails utilisateur:", error.message);
-            }  else {
-              setUserDetails(data);
-              setFormData(data); // Initialiser les champs avec les valeurs actuelles
-  
-              // Mettre à jour l'avatar avec l'URL de l'avatar de l'utilisateur
-              setSelectedAvatar(data.avatarUrl || gravatarList[0]); // Utiliser avatarUrl de l'utilisateur ou un avatar par défaut
-            }
+          if (error) {
+            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
+          } else {
+            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
+
+            // Mettez à jour le formulaire avec les informations de l'utilisateur
+            setFormData({
+              username: data.username,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              birthDate: data.birthDate,
+              avatarUrl: data.avatarUrl || gravatarList[0], // Utilise l'avatar de l'utilisateur ou un avatar par défaut
+            });
+            setSelectedAvatar(data.avatarUrl || gravatarList[0]);
           }
         }
       } catch (error) {
-        console.error("Une erreur est survenue lors de la récupération de l'utilisateur:", error);
+        console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
+        setUser(null); // Réinitialiser l'utilisateur en cas d'erreur
       }
     };
 
-    getUser();
+    getUser(); // Appel de la fonction pour récupérer l'utilisateur
   }, []);
 
-  // Gérer les modifications dans le formulaire
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevState: any) => ({
@@ -84,7 +95,6 @@ export default function SettingsPage() {
     }));
   };
 
-  // Sauvegarder les modifications
   const handleSave = async () => {
     setLoading(true);
     try {
@@ -101,13 +111,13 @@ export default function SettingsPage() {
         .eq("id", user.id);
 
       if (error) {
-        console.error("Error during update:", error.message);
-        alert("An error occurs.");
+        console.error("Erreur lors de la mise à jour :", error.message);
+        alert("Une erreur est survenue.");
       } else {
-        alert("Modifications successfully saved !");
+        alert("Modifications enregistrées avec succès !");
       }
     } catch (error) {
-      console.error("An error occurs:", error);
+      console.error("Erreur :", error);
     } finally {
       setLoading(false);
     }
@@ -115,145 +125,149 @@ export default function SettingsPage() {
 
   return (
     <main>
-      {user ? (
+      {!user ? (
+        <div className="flex flex-col items-center justify-center h-screen text-center bg-gray-100">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">
+            Vous n'êtes actuellement pas connecté.
+          </h1>
+          <p className="text-gray-800">
+            Veuillez vous connecter ou créer un compte pour accéder à cette page.
+          </p>
+          <button
+            onClick={() => (window.location.href = "/connexion")}
+            className="mt-6 bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+          >
+            Se connecter
+          </button>
+        </div>
+      ) : (
         <div className="h-screen">
           {userDetails ? (
             <div className="max-w-6xl mx-auto p-6 bg-white shadow-md rounded-lg">
-              <h1 className="text-2xl font-bold mb-4 text-gray-800">Your profil</h1>
+              <h1 className="text-2xl font-bold mb-4 text-gray-800">Votre profil</h1>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col items-center mb-8">
-                  <img
-                    src={selectedAvatar}
-                    alt=""
-                    className="w-60 h-60 rounded-full object-cover mb-4 bg-gray-200"
-                  />
+                <img
+                  src={selectedAvatar}
+                  alt="Avatar"
+                  className="w-48 h-48 rounded-full object-cover mb-4 bg-gray-200" // Réduction de la taille de l'avatar
+                />
+
                   <button
                     onClick={openLibrary}
-                    className=" w-5/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+                    className="w-5/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                   >
-                    Change your gravatar
+                    Changer votre avatar
                   </button>
-
-                  <button
-                    className="w-5/12 h-1/12 flex inline-block justify-center mt-4 text-red-800 border border-red-800 border-2 px-3 py-2 rounded-lg hover:text-white hover:bg-red-800"
-                  >
-                    Sign out
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                    </svg>
-                  </button>
-
                 </div>
                 {isLibraryOpen && (
                   <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                      <h2 className="text-xl font-bold mb-4">Choose your gravatar</h2>
+                      <h2 className="text-xl font-bold mb-4">Choisissez un avatar</h2>
                       <div className="grid grid-cols-3 gap-4">
                         {gravatarList.map((avatar, index) => (
                           <img
                             key={index}
                             src={avatar}
-                            alt=""
+                            alt="Avatar"
                             onClick={() => handleAvatarSelect(avatar)}
-                            className="w-20 h-20 rounded-full object-cover cursor-pointer hover:ring-4 hover:ring-blue-900 bg-gray-200"
+                            className="w-20 h-20 rounded-full object-cover cursor-pointer"
                           />
                         ))}
                       </div>
                       <button
                         onClick={closeLibrary}
-                        className="mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+                        className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg"
                       >
-                        Annuler
+                        Fermer
                       </button>
                     </div>
                   </div>
                 )}
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      id="username"
-                      value={formData.username || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      value={formData.firstName || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      value={formData.lastName || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={formData.email || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">
-                      Date of birth
-                    </label>
-                    <input
-                      type="date"
-                      id="birthDate"
-                      value={formData.birthDate || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                    Nom d'utilisateur
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    value={formData.username || ""}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                    Prénom
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={formData.firstName || ""}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                    Nom
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    value={formData.lastName || ""}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={formData.email || ""}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">
+                    Date de naissance
+                  </label>
+                  <input
+                    type="date"
+                    id="birthDate"
+                    value={formData.birthDate || ""}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                  />
                 </div>
               </div>
-
-              {/* Bouton de sauvegarde */}
-              <button
-                onClick={handleSave}
-                className="mt-6 w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-                disabled={loading}
-              >
-                {loading ? "Saving..." : "Save modifications"}
-              </button>
+              <div className="mt-8">
+                <button
+                  onClick={handleSave}
+                  disabled={loading}
+                  className={`w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  {loading ? "Enregistrement..." : "Enregistrer les modifications"}
+                </button>
+              </div>
+              <div className="mt-4">
+                <button
+                  onClick={handleLogout}
+                  className="w-full bg-red-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-red-800 border hover:border-red-800 border-2"
+                >
+                  Se déconnecter
+                </button>
+              </div>
             </div>
           ) : (
-            <p>Loading user details...</p>
+            <p>Chargement des détails utilisateur...</p>
           )}
-        </div>
-      ) : (
-        <div className="mt-4 text-lg text-red-600">
-          <p>You are not logged in.</p>
         </div>
       )}
     </main>
   );
 }
-

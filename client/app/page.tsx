@@ -6,7 +6,6 @@ import "aos/dist/aos.css";
 import AOS from "aos";
 import { supabase } from "../supabaseClient";
 
-
 export default function HomePage() {
   const [user, setUser] = useState<any>(null); // Stocker l'utilisateur dans l'état
   const [userDetails, setUserDetails] = useState<any>(null); // Stocker les détails de l'utilisateur
@@ -20,28 +19,29 @@ export default function HomePage() {
         // Récupère l'utilisateur connecté
         const { data: authData, error: authError } = await supabase.auth.getUser();
 
-        if (authError) {
-          console.error("Erreur lors de la récupération de l'utilisateur:", authError.message);
+        if (authError || !authData?.user) {
+          // Gestion propre des cas où aucune session n'est active
+          console.warn("Aucun utilisateur connecté ou session manquante.");
+          setUser(null);
         } else {
           setUser(authData.user); // Stocke l'utilisateur dans l'état
 
-          if (authData.user) {
-            // Récupérer les détails de l'utilisateur depuis la table 'users'
-            const { data, error } = await supabase
-              .from('users') // Assurez-vous que votre table s'appelle 'users'
-              .select('*') // Sélectionner toutes les colonnes ou des colonnes spécifiques comme 'name', 'avatar', etc.
-              .eq('id', authData.user.id) // Filtrer par l'ID de l'utilisateur connecté
-              .single(); // On prend seulement un utilisateur, car il est censé être unique
+          // Récupérer les détails de l'utilisateur depuis la table 'users'
+          const { data, error } = await supabase
+            .from("users") // Assurez-vous que votre table s'appelle 'users'
+            .select("*") // Sélectionner toutes les colonnes ou des colonnes spécifiques comme 'name', 'avatar', etc.
+            .eq("id", authData.user.id) // Filtrer par l'ID de l'utilisateur connecté
+            .single(); // On prend seulement un utilisateur, car il est censé être unique
 
-            if (error) {
-              console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
-            } else {
-              setUserDetails(data); // Stocke les détails supplémentaires dans l'état
-            }
+          if (error) {
+            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
+          } else {
+            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
           }
         }
       } catch (error) {
         console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
+        setUser(null); // Réinitialiser l'utilisateur en cas d'erreur
       }
     };
 
