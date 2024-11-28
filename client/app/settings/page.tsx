@@ -31,6 +31,10 @@ export default function SettingsPage() {
 
   const handleAvatarSelect = (avatar: string) => {
     setSelectedAvatar(avatar);
+    setFormData((prevState: any) => ({
+      ...prevState,
+      avatarUrl: avatar,  // Mettre à jour avatarUrl dans formData
+    }));
     closeLibrary();
   };
 
@@ -54,9 +58,12 @@ export default function SettingsPage() {
 
             if (error) {
               console.error("Erreur lors de la récupération des détails utilisateur:", error.message);
-            } else {
+            }  else {
               setUserDetails(data);
               setFormData(data); // Initialiser les champs avec les valeurs actuelles
+  
+              // Mettre à jour l'avatar avec l'URL de l'avatar de l'utilisateur
+              setSelectedAvatar(data.avatarUrl || gravatarList[0]); // Utiliser avatarUrl de l'utilisateur ou un avatar par défaut
             }
           }
         }
@@ -89,6 +96,7 @@ export default function SettingsPage() {
           lastName: formData.lastName,
           email: formData.email,
           birthDate: formData.birthDate,
+          avatarUrl: formData.avatarUrl,
         })
         .eq("id", user.id);
 
@@ -248,3 +256,4 @@ export default function SettingsPage() {
     </main>
   );
 }
+
