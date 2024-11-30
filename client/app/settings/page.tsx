@@ -126,16 +126,16 @@ export default function SettingsPage() {
   return (
     <main>
       {!user ? (
-        <div className="flex flex-col items-center justify-center h-screen text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">
+        <div className="flex flex-col items-center mt-20 h-screen text-center">
+          <h1 className="text-5xl font-bold text-red-600 mb-4">
             You are not currently connected.
           </h1>
-          <p className="text-gray-800">
+          <p className="text-white text-2xl">
             Sign in or create an account to access to this page.
           </p>
           <button
             onClick={() => (window.location.href = "/connexion")}
-            className="mt-6 bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+            className="w-3/12 h-1/12 mt-6 bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
           >
             Sign in
           </button>
