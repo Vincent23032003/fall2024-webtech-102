@@ -3,15 +3,14 @@
 import React, { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../supabaseClient";
-import { UUID } from "crypto";
 
 type Article = {
-  id: UUID;
+  id: string;
   title: string;
-  authorid: UUID;
+  authorid: string;
   description: string;
   likes: number;
-  comments: UUID[];
+  comments: string[];
   created_date: string;
   users: {
     username: string;
@@ -19,10 +18,10 @@ type Article = {
 };
 
 type Comment = {
-  id: UUID;
+  id: string;
   content: string;
-  articleid: UUID;
-  authorid: UUID;
+  articleid: string;
+  authorid: string;
   created_date: string;
   users: {
     username: string;
@@ -30,8 +29,8 @@ type Comment = {
 };
 
 export default function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
-  const articleId = resolvedParams.id;
+  const resolvedParams = use(params); // Déballer params ici
+  const articleId = resolvedParams.id; // Accéder à articleId après avoir déballé params
   const [article, setArticle] = useState<Article | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
@@ -90,7 +89,8 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
         .select(`
           id,
           content,
-
+          articleid,
+          authorid,
           created_date,
           users (username)
         `)
@@ -99,8 +99,19 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
 
       if (error) {
         console.error("Error fetching comments:", error);
-      } else {
-        setComments(data || []);
+        return;
+      }
+
+      if (data) {
+        const transformedComments: Comment[] = data.map((comment) => {
+          const user = Array.isArray(comment.users) ? comment.users[0] : comment.users;
+          return {
+            ...comment,
+            users: { username: user?.username || "Unknown Author" },
+          };
+        });
+
+        setComments(transformedComments);
       }
     };
 
@@ -144,29 +155,54 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   };
 
   if (loading) {
-    return <p>Loading article...</p>;
+    return <p className="text-center text-gray-500">Loading article...</p>;
   }
 
   if (!article) {
-    return <p>Article not found.</p>;
+    return <p className="text-center text-gray-500">Article not found.</p>;
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-gray-800">{article.title}</h1>
-      <p className="text-sm text-gray-500">
-        Published on {new Date(article.created_date).toLocaleDateString()} by{" "}
-        {article.users?.username || "Unknown Author"}
-      </p>
-      <div className="mt-6 text-gray-700">{article.description}</div>
+    <main className="max-w-4xl mx-auto p-6 space-y-8">
+      {/* Article Section */}
+      <section className="bg-white rounded-lg shadow-lg p-8">
+        <h1 className="text-4xl font-semibold text-gray-900">{article.title}</h1>
+        <p className="text-sm text-gray-500 mt-2">
+          Published on {new Date(article.created_date).toLocaleDateString()} by{" "}
+          {article.users?.username || "Unknown Author"}
+        </p>
+        <div className="mt-6 text-gray-700">{article.description}</div>
 
-      {/* Comments section */}
-      <section className="mt-8">
-        <h2 className="text-xl font-semibold">Comments</h2>
-        <div className="mt-4">
+        {/* Like Button with Counter */}
+        <div className="flex items-center mt-4 space-x-2">
+          <button className="text-red-500 hover:text-red-600 flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 21l-6-5 2-7-5-6 7-1L12 2l3 6 7 1-5 6 2 7-6 5z"
+              />
+            </svg>
+            <span>{article.likes} Likes</span>
+          </button>
+        </div>
+      </section>
+
+      {/* Comments Section */}
+      <section className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-semibold text-gray-800">Comments</h2>
+
+        <div className="mt-4 space-y-4">
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <div key={comment.id} className="border-b py-2">
+              <div key={comment.id} className="border-b pb-4">
                 <p className="text-gray-700">{comment.content}</p>
                 <p className="text-sm text-gray-500">
                   Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
@@ -179,27 +215,29 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
           )}
         </div>
 
-        {/* Add comment button */}
-        <button
-          onClick={() => setShowCommentForm(true)}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Comment
-        </button>
+        {/* Add Comment Button */}
+        <div className="mt-6">
+          <button
+            onClick={() => setShowCommentForm(true)}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Add a Comment
+          </button>
+        </div>
 
-        {/* Comment form */}
+        {/* Comment Form */}
         {showCommentForm && (
           <div className="mt-4">
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write a comment..."
-              className="w-full border rounded p-2"
+              className="w-full border border-gray-300 rounded-lg p-3"
             />
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500 mt-2">{error}</p>}
             <button
               onClick={handleAddComment}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Save Comment
             </button>
