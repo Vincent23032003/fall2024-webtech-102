@@ -29,14 +29,15 @@ type Comment = {
 };
 
 export default function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params); // Déballer params ici
-  const articleId = resolvedParams.id; // Accéder à articleId après avoir déballé params
+  const resolvedParams = use(params);
+  const articleId = resolvedParams.id;
   const [article, setArticle] = useState<Article | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasLiked, setHasLiked] = useState<boolean>(false); // Vérifier si l'utilisateur a déjà liké l'article
   const router = useRouter();
 
   // Fetch article
@@ -118,6 +119,36 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
     fetchComments();
   }, [articleId]);
 
+  // Vérifier si l'utilisateur a déjà liké l'article
+  useEffect(() => {
+    const checkIfUserLiked = async () => {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        setHasLiked(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("likes")
+        .select("*")
+        .eq("articleid", articleId)
+        .eq("authorid", user.id)
+        .single();
+
+      if (data) {
+        setHasLiked(true); // Si un like existe, on marque l'utilisateur comme ayant liké
+      } else {
+        setHasLiked(false); // Si aucun like n'est trouvé, l'utilisateur peut liker
+      }
+    };
+
+    checkIfUserLiked();
+  }, [articleId]);
+
   const handleAddComment = async () => {
     setError(null);
 
@@ -154,6 +185,70 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
     }
   };
 
+  // Fonction pour liker l'article
+  const handleLikeArticle = async () => {
+    console.log("Trying to like article...");
+    setError(null);
+  
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        console.log("User not authenticated.");
+        throw new Error("Unauthenticated user.");
+      }
+      console.log("User is authenticated", user);
+  
+      // Vérifier si l'article existe avant de procéder à l'incrémentation
+      if (!article) {
+        console.log("Article not found.");
+        throw new Error("Article not found.");
+      }
+  
+      if (hasLiked) {
+        console.log("User has already liked this article.");
+        throw new Error("You have already liked this article.");
+      }
+  
+      const { error: likeError } = await supabase.from("likes").insert({
+        articleid: articleId,
+        authorid: user.id,
+      });
+  
+      if (likeError) {
+        console.log("Error inserting like", likeError);
+        throw likeError;
+      }
+  
+      const { data, error } = await supabase
+        .from("articles")
+        .update({ likes: article.likes + 1 })
+        .eq("id", articleId)
+        .select();
+  
+      if (error) {
+        console.log("Error updating article likes", error);
+        throw error;
+      }
+  
+      if (data && data[0]) {
+        setArticle(prevArticle => prevArticle ? { ...prevArticle, likes: data[0].likes } : null);
+        setHasLiked(true);
+        console.log("Like successful", data[0].likes);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Error liking article.");
+        console.log("Error liking article", err.message);
+      } else {
+        // Si l'erreur n'est pas une instance de Error
+        setError("An unexpected error occurred.");
+        console.log("Unexpected error", err);
+      }
+    }
+    
+  };
+  
+
   if (loading) {
     return <p className="text-center text-gray-500">Loading article...</p>;
   }
@@ -175,34 +270,35 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
 
         {/* Like Button with Counter */}
         <div className="flex items-center mt-4 space-x-2">
-          <button className="text-red-500 hover:text-red-600 flex items-center">
+          <button
+            onClick={handleLikeArticle}
+            className={`text-red-500 hover:text-red-600 flex items-center ${hasLiked ? 'cursor-not-allowed opacity-50' : ''}`}
+            disabled={hasLiked} // Désactiver le bouton si l'utilisateur a déjà liké
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2"
+              className="h-5 w-5 mr-1"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               strokeWidth="2"
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 21l-6-5 2-7-5-6 7-1L12 2l3 6 7 1-5 6 2 7-6 5z"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
               />
             </svg>
-            <span>{article.likes} Likes</span>
+            <span>{article.likes}</span> Likes
           </button>
         </div>
       </section>
 
       {/* Comments Section */}
-      <section className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-800">Comments</h2>
-
-        <div className="mt-4 space-y-4">
+      <section>
+        <h2 className="text-2xl font-semibold">Comments</h2>
+        <div className="mt-4">
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <div key={comment.id} className="border-b pb-4">
+              <div key={comment.id} className="border-b py-2">
                 <p className="text-gray-700">{comment.content}</p>
                 <p className="text-sm text-gray-500">
                   Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
@@ -215,26 +311,23 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
           )}
         </div>
 
-        {/* Add Comment Button */}
-        <div className="mt-6">
-          <button
-            onClick={() => setShowCommentForm(true)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Add a Comment
-          </button>
-        </div>
-
         {/* Comment Form */}
+        <button
+          onClick={() => setShowCommentForm(true)}
+          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Add Comment
+        </button>
+
         {showCommentForm && (
           <div className="mt-4">
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write a comment..."
-              className="w-full border border-gray-300 rounded-lg p-3"
+              className="w-full border rounded p-2"
             />
-            {error && <p className="text-red-500 mt-2">{error}</p>}
+            {error && <p className="text-red-500">{error}</p>}
             <button
               onClick={handleAddComment}
               className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
