@@ -56,7 +56,7 @@ export default function HomePage() {
             Join the ASM Movement ! Support, Connect, Celebrate all together
           </h1>
           <p className="mb-6 text-lg font-normal text-white lg:text-xl sm:px-16 xl:px-48 animate-fade-left animate-delay-[400ms] dark:text-white">
-            Here is the ASM website, the ultimate hub for the ultimate ASM fans! Stay connected with your ASM latest updates, engage with the community, and celebrate the spirit of the game together.
+            Here is the ASM website, the ultimate hub for the ASM fans! Stay connected with your ASM latest updates, engage with the community, and celebrate the spirit of the game together.
           </p>
           <div className="flex justify-center inline-block">
             <a

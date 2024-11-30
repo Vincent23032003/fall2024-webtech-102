@@ -94,7 +94,7 @@ export default function Navbar() {
             The Club
           </Link>
           {isDropdownOpen && (
-            <div id="mega-menu-dropdown" className="absolute z-10 m-2 w-auto left-8 text-base bg-white rounded-lg">
+            <div id="mega-menu-dropdown" className="absolute w-40 h-4/12 z-10 m-2 w-auto left-8 text-base bg-white rounded-lg">
               <div className="p-4 pb-0 text-dark md:pb-4">
                 <ul className="space-y-4" aria-labelledby="mega-menu-dropdown-button">
                   <li>
@@ -103,7 +103,7 @@ export default function Navbar() {
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={closeDropdown} className="text-black hover:text-blue-900 hover:font-bold">
+                    <a href="/legends" onClick={closeDropdown} className="text-black hover:text-blue-900 hover:font-bold">
                       Legend Players
                     </a>
                   </li>
@@ -193,21 +193,6 @@ export default function Navbar() {
                   </svg>
                 </Link>
               )}
-              {/* {!user ? (
-            ) : (
-              <Link
-                onMouseEnter={() => setIsTooltipVisible1(true)}
-                onMouseLeave={() => setIsTooltipVisible1(false)}
-                href="/connexion"
-                className="flex inline-block hover:animate-rotate-y"
-              >
-                <Image
-                  src={selectedAvatar}
-                  alt='avatar-logo'
-                />
-              </Link>
-            )} */}
-
             {isTooltipVisible1 && (
               <div
                 role="tooltip"
