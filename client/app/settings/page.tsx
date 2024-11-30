@@ -114,7 +114,7 @@ export default function SettingsPage() {
         console.error("Erreur lors de la mise à jour :", error.message);
         alert("Une erreur est survenue.");
       } else {
-        alert("Modifications enregistrées avec succès !");
+        alert("Modifications successfully registered !");
       }
     } catch (error) {
       console.error("Erreur :", error);
@@ -126,145 +126,147 @@ export default function SettingsPage() {
   return (
     <main>
       {!user ? (
-        <div className="flex flex-col items-center justify-center h-screen text-center bg-gray-100">
+        <div className="flex flex-col items-center justify-center h-screen text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
-            Vous n'êtes actuellement pas connecté.
+            You are not currently connected.
           </h1>
           <p className="text-gray-800">
-            Veuillez vous connecter ou créer un compte pour accéder à cette page.
+            Sign in or create an account to access to this page.
           </p>
           <button
             onClick={() => (window.location.href = "/connexion")}
             className="mt-6 bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
           >
-            Se connecter
+            Sign in
           </button>
         </div>
       ) : (
         <div className="h-screen">
           {userDetails ? (
             <div className="max-w-6xl mx-auto p-6 bg-white shadow-md rounded-lg">
-              <h1 className="text-2xl font-bold mb-4 text-gray-800">Votre profil</h1>
+              <h1 className="text-2xl font-bold mb-4 text-gray-800">Profile details</h1>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col items-center mb-8">
-                <img
-                  src={selectedAvatar}
-                  alt="Avatar"
-                  className="w-48 h-48 rounded-full object-cover mb-4 bg-gray-200" // Réduction de la taille de l'avatar
-                />
+                <div className="flex flex-col items-center justify-center mb-8">
+                  <img
+                    src={selectedAvatar}
+                    alt=""
+                    className="w-48 h-48 rounded-full object-cover mb-4 bg-gray-200"
+                  />
 
                   <button
                     onClick={openLibrary}
                     className="w-5/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                   >
-                    Changer votre avatar
+                    Change your gravatar
                   </button>
                 </div>
                 {isLibraryOpen && (
                   <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-                      <h2 className="text-xl font-bold mb-4">Choisissez un avatar</h2>
+                      <h2 className="text-xl font-bold mb-4">Choose a gravatar</h2>
                       <div className="grid grid-cols-3 gap-4">
                         {gravatarList.map((avatar, index) => (
                           <img
                             key={index}
                             src={avatar}
-                            alt="Avatar"
+                            alt=""
                             onClick={() => handleAvatarSelect(avatar)}
-                            className="w-20 h-20 rounded-full object-cover cursor-pointer"
+                            className="w-20 h-20 rounded-full object-cover cursor-pointer bg-gray-200"
                           />
                         ))}
                       </div>
                       <button
                         onClick={closeLibrary}
-                        className="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg"
+                        className="mt-4 bg-white border border-red-800 text-red-800 px-4 py-2 rounded-lg hover:bg-red-800 hover:text-white"
                       >
-                        Fermer
+                        Close
                       </button>
                     </div>
                   </div>
                 )}
-                <div>
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                    Nom d'utilisateur
-                  </label>
-                  <input
-                    type="text"
-                    id="username"
-                    value={formData.username || ""}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                    Prénom
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    value={formData.firstName || ""}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                    Nom
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    value={formData.lastName || ""}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={formData.email || ""}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">
-                    Date de naissance
-                  </label>
-                  <input
-                    type="date"
-                    id="birthDate"
-                    value={formData.birthDate || ""}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                  />
+                <div className="flex flex-col mb-8">
+                  <div>
+                    <label htmlFor="username"  className="block text-sm font-medium text-gray-700">
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      id="username"
+                      value={formData.username || ""}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="firstName" className="block mt-4 text-sm font-medium text-gray-700">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={formData.firstName || ""}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName" className="block mt-4 text-sm font-medium text-gray-700">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={formData.lastName || ""}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block mt-4 text-sm font-medium text-gray-700">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={formData.email || ""}
+                      onChange={handleInputChange}
+                      className="w-full  px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="birthDate" className="block mt-4 text-sm font-medium text-gray-700">
+                      Date of Birth
+                    </label>
+                    <input
+                      type="date"
+                      id="birthDate"
+                      value={formData.birthDate || ""}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="mt-8">
+              <div className="mt-2">
                 <button
                   onClick={handleSave}
                   disabled={loading}
                   className={`w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  {loading ? "Enregistrement..." : "Enregistrer les modifications"}
+                  {loading ? "Saving..." : "Save modifications"}
                 </button>
               </div>
               <div className="mt-4">
                 <button
                   onClick={handleLogout}
-                  className="w-full bg-red-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-red-800 border hover:border-red-800 border-2"
+                  className="w-full bg-white border border-red-800 text-red-800 font-medium py-2 px-4 rounded-lg hover:bg-red-800 hover:text-white"
                 >
-                  Se déconnecter
+                  Sign out
                 </button>
               </div>
             </div>
           ) : (
-            <p>Chargement des détails utilisateur...</p>
+            <p>Loading of user details...</p>
           )}
         </div>
       )}

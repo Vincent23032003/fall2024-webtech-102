@@ -1,18 +1,24 @@
 'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { User } from 'lucide-react';
+import { supabase } from "../supabaseClient";
 import React from 'react';
 
 export default function Navbar() {
+
+  const gravatarList = [
+    "https://gravatar.com/avatar/fb6d18d4bb9824850e8dfbe24d87809a?s=400&d=robohash&r=x",
+  ];
+
   const [profile, setProfile] = useState<{ username: string; email: string } | null>(null);
-  const supabase = createClientComponentClient();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [isTooltipVisible1, setIsTooltipVisible1] = useState(false);
-
+  const [user, setUser] = useState<any>(null); // Stocker l'utilisateur dans l'état
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(gravatarList[0]);
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -24,39 +30,38 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const getUser = async () => {
       try {
-        // Get the session from Supabase
-        const {
-          data: { session },
-          error: sessionError,
-        } = await supabase.auth.getSession();
+        // Récupère l'utilisateur connecté
+        const { data: authData, error: authError } = await supabase.auth.getUser();
 
-        if (sessionError || !session) {
-          console.log('No session found');
-          return;
-        }
-
-        // Call the profile API
-        const response = await fetch('http://localhost:3000/api/profile', {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setProfile(data);
+        if (authError || !authData?.user) {
+          console.warn("Aucun utilisateur connecté ou session manquante.");
+          setUser(null);
         } else {
-          console.log('Error fetching profile:', response.statusText);
+          setUser(authData.user); // Stocke l'utilisateur dans l'état
+
+          // Récupérer les détails de l'utilisateur depuis la table 'users'
+          const { data, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", authData.user.id)
+            .single();
+
+          if (error) {
+            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
+          } else {
+            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
+            setSelectedAvatar(data.avatarUrl);
+          }
         }
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
+        setUser(null);
       }
     };
-
-    fetchProfile();
-  }, [supabase]);
+    getUser();
+  }, []);
 
   return (
     <nav className="text-white p-4 w-full">
@@ -138,7 +143,6 @@ export default function Navbar() {
 
         {profile ? (
           <div className="flex items-center gap-2">
-            <User className="w-6 h-6 text-white" />
             <span className="font-custom text-white">{profile.username}</span>
           </div>
         ) : (
@@ -158,30 +162,61 @@ export default function Navbar() {
               <div
                 role="tooltip"
                 className="absolute z-10 mt-20 px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
-              >
-                Settings
-                <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
-              </div>
-            )}
-            <Link
-              onMouseEnter={() => setIsTooltipVisible1(true)}
-              onMouseLeave={() => setIsTooltipVisible1(false)}
-              href="/connexion"
-              className="flex inline-block hover:animate-rotate-y"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-              </svg>
-              </Link>
-              {isTooltipVisible1 && (
-                <div
-                  role="tooltip"
-                  className="absolute z-10 mt-20 px-3 py-2 text-sm left-1/2 font-medium text-yellow-400 bg-blue-900 rounded-lg "
                 >
-                  Register
-                  <div className="absolute w-2 h-2 bg-blue-900  transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
+                  Settings
+                  <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
                 </div>
               )}
+              {user ? (
+                <Link
+                  onMouseEnter={() => setIsTooltipVisible1(true)}
+                  onMouseLeave={() => setIsTooltipVisible1(false)}
+                  href="/connexion"
+                  className="flex inline-block hover:animate-rotate-y"
+                >
+                  <img
+                    src={selectedAvatar}
+                    alt=""
+                    className="w-20 h-15 rounded-full object-cover mb-4 bg-gray-200"
+                  />
+                </Link>
+              ) : (
+
+                <Link
+                  onMouseEnter={() => setIsTooltipVisible1(true)}
+                  onMouseLeave={() => setIsTooltipVisible1(false)}
+                  href="/connexion"
+                  className="flex inline-block hover:animate-rotate-y"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  </svg>
+                </Link>
+              )}
+              {/* {!user ? (
+            ) : (
+              <Link
+                onMouseEnter={() => setIsTooltipVisible1(true)}
+                onMouseLeave={() => setIsTooltipVisible1(false)}
+                href="/connexion"
+                className="flex inline-block hover:animate-rotate-y"
+              >
+                <Image
+                  src={selectedAvatar}
+                  alt='avatar-logo'
+                />
+              </Link>
+            )} */}
+
+            {isTooltipVisible1 && (
+              <div
+                role="tooltip"
+                className="absolute z-10 mt-20 px-3 py-2 text-sm left-1/2 font-medium text-yellow-400 bg-blue-900 rounded-lg "
+              >
+                Register
+                <div className="absolute w-2 h-2 bg-blue-900  transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
+              </div>
+            )}
           </div>
         )}
       </div>
