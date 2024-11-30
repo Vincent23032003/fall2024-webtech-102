@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../supabaseClient";
 import { UUID } from "crypto";
+import { User } from "@supabase/supabase-js"; // Import du type User
 
 type Article = {
   id: number;
@@ -21,8 +22,25 @@ type Article = {
 export default function BlogPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null); // Utilisation explicite de User | null
   const router = useRouter();
 
+  // Vérifier l'utilisateur connecté
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur :", error.message);
+        setUser(null);
+      } else {
+        setUser(user); // Assigner l'utilisateur si connecté
+      }
+    };
+
+    checkUser();
+  }, []);
+
+  // Récupérer les articles
   useEffect(() => {
     const fetchArticles = async () => {
       try {
@@ -57,9 +75,28 @@ export default function BlogPage() {
     fetchArticles();
   }, []);
 
+  // Fonction pour rediriger vers la page "Écrire un article"
+  const handleWriteArticle = () => {
+    router.push("/blog/new"); // Redirection vers la page client/app/blog/new/page.tsx
+  };
+
   return (
     <main className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Blog</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Blog</h1>
+        {/* Bouton "Écrire un article" */}
+        {user ? (
+          <button
+            onClick={handleWriteArticle}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            Écrire un article
+          </button>
+        ) : (
+          <p className="text-sm text-gray-500">Connectez-vous pour écrire un article.</p>
+        )}
+      </div>
+
       {loading ? (
         <p>Chargement des articles...</p>
       ) : articles.length === 0 ? (
@@ -80,12 +117,11 @@ export default function BlogPage() {
                   {article.likes} J'aime
                 </button>
                 <button
-                onClick={() => router.push(`/articles/${article.id}`)}
-                className="text-white bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600"
-              >
-                Read the article
-              </button>
-
+                  onClick={() => router.push(`/articles/${article.id}`)}
+                  className="text-white bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600"
+                >
+                  Lire l'article
+                </button>
               </div>
             </div>
           ))}
