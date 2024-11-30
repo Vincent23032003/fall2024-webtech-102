@@ -24,6 +24,9 @@ type Comment = {
   articleid: UUID;
   authorid: UUID;
   created_date: string;
+  users: {
+    username: string;
+  };
 };
 
 export default function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
@@ -65,7 +68,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
             users: {
               username: user?.username || "Unknown Author",
             },
-            authorid: data.authorid // Utiliser data.author_id qui est de type UUID
+            authorid: data.authorid,
           };
           setArticle(transformedArticle);
         }
@@ -84,7 +87,13 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
     const fetchComments = async () => {
       const { data, error } = await supabase
         .from("comments")
-        .select("*")
+        .select(`
+          id,
+          content,
+
+          created_date,
+          users (username)
+        `)
         .eq("articleid", articleId)
         .order("created_date", { ascending: true });
 
@@ -160,8 +169,8 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
               <div key={comment.id} className="border-b py-2">
                 <p className="text-gray-700">{comment.content}</p>
                 <p className="text-sm text-gray-500">
-                Published on {new Date(article.created_date).toLocaleDateString()} by{" "}
-                {article.users?.username || "Unknown Author"}
+                  Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
+                  {comment.users?.username || "Unknown Author"}
                 </p>
               </div>
             ))
