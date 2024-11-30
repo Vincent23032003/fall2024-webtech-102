@@ -3,15 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../supabaseClient";
+import { UUID } from "crypto";
 
 type Article = {
   id: number;
   title: string;
   description: string;
-  author: string;
-  like: number;
-  comment: any[];
-  create_date: string;
+  authorid: UUID;
+  likes: number;
+  comments: UUID;
+  created_date: string;
   users: {
     username: string;
   };
@@ -31,13 +32,13 @@ export default function BlogPage() {
             id,
             title,
             description,
-            author,
-            like,
-            comment,
-            create_date,
+            authorid,
+            likes,
+            comments,
+            created_date,
             users (username)
           `)
-          .order("create_date", { ascending: false });
+          .order("created_date", { ascending: false });
 
         if (error) {
           console.error("Erreur lors de la récupération des articles :", error.message);
@@ -69,14 +70,14 @@ export default function BlogPage() {
             <div key={article.id} className="p-6 bg-white shadow-md rounded-lg">
               <h2 className="text-2xl font-bold text-gray-800">{article.title}</h2>
               <p className="text-sm text-gray-500">
-                Publié le {new Date(article.create_date).toLocaleDateString()} par{" "}
+                Publié le {new Date(article.created_date).toLocaleDateString()} par{" "}
                 {article.users?.username || "Auteur inconnu"}
               </p>
               <p className="mt-4 text-gray-700">{article.description.slice(0, 150)}...</p>
               <div className="mt-6 flex items-center space-x-4">
                 <button className="text-blue-500 hover:underline">Commenter</button>
                 <button className="text-gray-500 hover:text-red-500">
-                  {article.like} J'aime
+                  {article.likes} J'aime
                 </button>
                 <button
                 onClick={() => router.push(`/articles/${article.id}`)}
