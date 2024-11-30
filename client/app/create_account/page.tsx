@@ -15,7 +15,7 @@ const CreateAccountPage = () => {
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [dateBirth, setDateBirth] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false); // Empêche les clics multiples
@@ -63,7 +63,7 @@ const CreateAccountPage = () => {
             username,
             firstName,
             lastName,
-            dateBirth,
+            birthDate,
             password: hashedPassword, // Mot de passe haché
             updatedAt: new Date(),
             createdAt: new Date(),
@@ -80,7 +80,7 @@ const CreateAccountPage = () => {
       setUsername("");
       setFirstName("");
       setLastName("");
-      setDateBirth("");
+      setBirthDate("");
 
       // Redirection vers la page de connexion après succès
       router.push("/connexion");
@@ -167,8 +167,8 @@ const CreateAccountPage = () => {
             <input
               id="date"
               type="date"
-              value={dateBirth}
-              onChange={(e) => setEmail(e.target.value)}
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               required
             />
@@ -208,7 +208,7 @@ const CreateAccountPage = () => {
             className="w-full bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
             disabled={isSubmitting} // Désactiver le bouton si en cours de soumission
           >
-            {isSubmitting ? "Creation in progress..." : "Create the account"}
+            {isSubmitting ? "Creation in progress..." : "Create account"}
           </button>
         </form>
       </div>
