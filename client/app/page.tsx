@@ -81,7 +81,7 @@ export default function HomePage() {
               </svg>
             </a>
             <a
-              href="/blog"
+              href="/legends"
               className="w-3/12 h-1/12 inline-flex items-center justify-center px-5 py-3 mx-4 text-base font-medium rounded-lg text-center text-white animate-fade-left animate-delay-[1300ms] hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
               See the legends of the club
@@ -102,7 +102,7 @@ export default function HomePage() {
               </svg>
             </a>
             <a
-              href="/blog"
+              href="/team"
               className="w-3/12 h-1/12 inline-flex items-center justify-center px-5 py-3 mx-4 text-base font-medium rounded-lg text-center text-white animate-fade-left animate-delay-[1800ms] hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
               See all the players
