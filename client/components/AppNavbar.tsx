@@ -94,7 +94,7 @@ export default function Navbar() {
             The Club
           </Link>
           {isDropdownOpen && (
-            <div id="mega-menu-dropdown" className="absolute w-1/5 h-4/12 z-10 m-2 w-auto left-8 text-base bg-white rounded-lg">
+            <div id="mega-menu-dropdown" className="absolute w-40 h-4/12 z-10 m-2 left-8 text-base bg-white rounded-lg">
               <div className="p-4 pb-0 text-dark md:pb-4">
                 <ul className="space-y-4" aria-labelledby="mega-menu-dropdown-button">
                   <li>
@@ -131,7 +131,7 @@ export default function Navbar() {
             href="/blog"
             className="relative font-custom text-lg pb-0.5 after:absolute after:left-0 after:-bottom-0.5 after:w-full after:scale-x-0 after:border-b-2 after:border-yellow-400 after:transition-transform after:duration-300 hover:after:scale-x-100 hover:text-yellow-400"
           >
-            News & Blog
+            Blog
           </Link>
           <Link
             href="/support"

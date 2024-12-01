@@ -52,7 +52,7 @@ export default function HomePage() {
     <main>
       <div className="grid place-items-start">
         <div className="mt-24 mx-2 text-center">
-          <h1 className="mb-4 mt-10 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl animate-fade-left dark:text-white">
+          <h1 className="mb-4 mt-10 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl animate-fade-left dark:text-white">
             Join the ASM Movement ! Support, Connect, Celebrate all together
           </h1>
           <p className="mb-6 text-lg font-normal text-white lg:text-xl sm:px-16 xl:px-48 animate-fade-left animate-delay-[400ms] dark:text-white">
@@ -141,7 +141,7 @@ export default function HomePage() {
               <span className="grid grid-cols-3 m-2">
                 <div>
                   <Image
-                    src="/assets/stade-rochelais-logo.png"
+                    src="/assets/stade-rochelais.png"
                     width={120}
                     height={90}
                     alt="stade-rochelais-logo"
@@ -162,7 +162,7 @@ export default function HomePage() {
               </span>
               <a
                 href="/blog"
-                className="w-7/12 h-1/12 inline-flex items-center justify-center px-5 py-3 m-2 text-base font-medium rounded-lg text-center hover:text-white text-yellow-400 bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                className="w-7/12 h-1/12 inline-flex items-center justify-center px-5 py-3 m-2 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
               >
                 See results
               </a>
@@ -280,7 +280,7 @@ export default function HomePage() {
               </span>
               <a
                 href="/blog"
-                className="w-7/12 h-1/12 inline-flex items-center justify-center px-5 py-3 m-2 text-base font-medium rounded-lg text-center hover:text-white text-yellow-400 hover:border-white hover:border-yellow-400 bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                className="w-7/12 h-1/12 inline-flex items-center justify-center px-5 py-3 m-2 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
               >
                 See the team roster
               </a>

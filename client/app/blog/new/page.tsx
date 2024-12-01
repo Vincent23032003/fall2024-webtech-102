@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../supabaseClient";
 import { User } from "@supabase/supabase-js";
+import WysiwygEditor from "../../../components/WysiwygEditor"
 
 export default function NewArticlePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -12,6 +13,12 @@ export default function NewArticlePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [textSizeDropdownVisible, setTextSizeDropdownVisible] = useState(false);
+
+
+  const handleToggleTextSize = () => {
+    setTextSizeDropdownVisible(!textSizeDropdownVisible);
+  };
 
   // Vérifier l'utilisateur connecté
   useEffect(() => {
@@ -85,61 +92,9 @@ export default function NewArticlePage() {
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Créer un nouvel article</h1>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleCreateArticle();
-        }}
-        className="space-y-6"
-      >
-        {/* Champ pour le titre */}
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Titre
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Entrez le titre de votre article"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-        </div>
-
-        {/* Champ pour la description */}
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Rédigez la description de votre article"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-        </div>
-
-        {/* Message d'erreur */}
-        {error && <p className="text-red-500">{error}</p>}
-
-        {/* Bouton de création */}
-        <div>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {loading ? "Publication en cours..." : "Publier l'article"}
-          </button>
-        </div>
-      </form>
+    <main className="max-w-4xl mx-auto h-screen">
+      <h2 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white">Create a new article</h2>
+      <WysiwygEditor />
     </main>
   );
 }

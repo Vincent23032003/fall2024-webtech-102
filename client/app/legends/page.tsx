@@ -15,7 +15,7 @@ export default function LegendsPage() {
                         <img
                             src="/assets/rougerie.png" // Remplacez avec l'image réelle du joueur
                             alt="Joueur"
-                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 w-52 h-auto object-cover z-10 rounded-xl"
+                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 w-52 object-cover z-10 rounded-xl"
                         />
 
                         {/* Badge du rôle */}
@@ -45,7 +45,7 @@ export default function LegendsPage() {
                         <img
                             src="/assets/parra.png" // Remplacez avec l'image réelle du joueur
                             alt="Joueur"
-                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 h-auto object-cover z-10 rounded-xl"
+                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
                         {/* Badge du rôle */}
@@ -73,7 +73,7 @@ export default function LegendsPage() {
                         <img
                             src="/assets/brock.png" // Remplacez avec l'image réelle du joueur
                             alt="Joueur"
-                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 h-auto object-cover z-10 rounded-xl"
+                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
                         {/* Badge du rôle */}
@@ -102,7 +102,7 @@ export default function LegendsPage() {
                         <img
                             src="/assets/cudmore.png" // Remplacez avec l'image réelle du joueur
                             alt="Joueur"
-                            className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 h-auto object-cover z-10 rounded-xl"
+                            className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
                         {/* Badge du rôle */}
@@ -130,7 +130,7 @@ export default function LegendsPage() {
                         <img
                             src="/assets/domingo.png" // Remplacez avec l'image réelle du joueur
                             alt="Joueur"
-                            className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 h-auto object-cover z-10 rounded-xl"
+                            className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
                         {/* Badge du rôle */}
@@ -159,7 +159,7 @@ export default function LegendsPage() {
                         <img
                             src="/assets/wesley.png" // Remplacez avec l'image réelle du joueur
                             alt="Joueur"
-                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 h-auto object-cover z-10 rounded-xl"
+                            className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
                         {/* Badge du rôle */}

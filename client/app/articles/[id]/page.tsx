@@ -260,62 +260,51 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   return (
     <main className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Article Section */}
-      <section className="bg-white rounded-lg shadow-lg p-8">
+      <section className="bg-white rounded-xl shadow-2xl p-8">
         <h1 className="text-4xl font-semibold text-gray-900">{article.title}</h1>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-700 mt-2">
           Published on {new Date(article.created_date).toLocaleDateString()} by{" "}
           {article.users?.username || "Unknown Author"}
         </p>
-        <div className="mt-6 text-gray-700">{article.description}</div>
+        <div className="mt-6 text-black">{article.description}</div>
 
         {/* Like Button with Counter */}
         <div className="flex items-center mt-4 space-x-2">
           <button
             onClick={handleLikeArticle}
-            className={`text-red-500 hover:text-red-600 flex items-center ${hasLiked ? 'cursor-not-allowed opacity-50' : ''}`}
+            className={`text-red-600 flex items-center ${hasLiked ? 'cursor-not-allowed opacity-50 animate-bounce animate-twice' : ''}`}
             disabled={hasLiked} // Désactiver le bouton si l'utilisateur a déjà liké
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-            >
-              <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-              />
+            <span>{article.likes}</span> 
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
-            <span>{article.likes}</span> Likes
           </button>
         </div>
-      </section>
 
       {/* Comments Section */}
-      <section>
-        <h2 className="text-2xl font-semibold">Comments</h2>
-        <div className="mt-4">
+        <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
+        <div className="mt-2">
           {comments.length > 0 ? (
             comments.map((comment) => (
-              <div key={comment.id} className="border-b py-2">
-                <p className="text-gray-700">{comment.content}</p>
-                <p className="text-sm text-gray-500">
+              <div key={comment.id} className="border-b border-gray-500 py-2">
+                <p className="text-black">{comment.content}</p>
+                <p className="text-sm text-gray-700">
                   Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
                   {comment.users?.username || "Unknown Author"}
                 </p>
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No comments yet.</p>
+            <p className="text-black">No comments yet.</p>
           )}
         </div>
 
         {/* Comment Form */}
         <button
           onClick={() => setShowCommentForm(true)}
-          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
+          className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+          >
           Add Comment
         </button>
 
