@@ -172,7 +172,7 @@ export default function LegendsPage() {
                 <p className="text-base mt-1">Nationality : French</p>
                 <p className="text-base mt-1">Size : 1,88m</p>
                 <p className="text-base mt-1">Weight : 107kg</p>
-                <p className="text-base mt-1">Period at ASM  : Training club</p>
+                <p className="text-base mt-1">Arrival at ASM  : Training club</p>
               </div>
             </div>
           </div>
@@ -365,7 +365,7 @@ export default function LegendsPage() {
                 <p className="text-base mt-1">Nationality : French</p>
                 <p className="text-base mt-1">Size : 1,87m</p>
                 <p className="text-base mt-1">Weight : 98kg</p>
-                <p className="text-base mt-1">Period at ASM  : Training Club</p>
+                <p className="text-base mt-1">Arrival at ASM  : Training Club</p>
               </div>
             </div>
           </div>
@@ -422,7 +422,6 @@ export default function LegendsPage() {
                 <p className="text-base mt-1">Size : 1,89m</p>
                 <p className="text-base mt-1">Weight : 93kg</p>
                 <p className="text-base mt-1">Arrival at ASM  : 2022</p>
-                <p className="text-base mt-1">Status : Coach of the Toronto Arrows</p>
               </div>
             </div>
           </div>
