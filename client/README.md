@@ -46,3 +46,7 @@ This is frontend part of the project. In this part you can find all web pages th
 4. Open your localhost on a web browser
     ```bash
     http://localhost:3000
+
+
+// app on vercell
+https://fall2024-webtech-102-6il7.vercel.app/
