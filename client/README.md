@@ -4,7 +4,7 @@
 
 This is frontend part of the project. In this part you can find all web pages that composed the website. It will be updated weekly.
 
-## Features
+## Features 🏉
 
 ### 1. User authentication
 - Secure registration and login.
@@ -27,12 +27,12 @@ This is frontend part of the project. In this part you can find all web pages th
 - Add a profile photo and edit personal information.
 
 
-## Technologies used
-- Frontend framework**: [Next.js](https://nextjs.org/)
-- Language**: TypeScript (tsx)
-- Styles**: Tailwind CSS
+## Technologies used 👨🏻‍💻
+- Frontend framework: [Next.js](https://nextjs.org/)
+- Language: TypeScript (tsx)
+- Styles: Tailwind CSS
 
-## How to use it ?
+## How to use it ❓
 
 1. Clone the project :
    ```bash
