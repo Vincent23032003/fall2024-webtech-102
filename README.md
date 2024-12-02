@@ -1,8 +1,8 @@
 # Webtech Project
 
-## Introduction
+## Introduction 🔵🟡
 
-This project will be updated weekly with new features in order to have a complete web application using Next.js as a framework with an API folder for database and a Client folder for frontend stuff.
+Welcome to the support site for our ASM rugby team! This project is an interactive platform designed to bring together fans, players and the community around our team. This site allows users to get informed, interact and personalize their experience.
 
 ## Contributors
 
