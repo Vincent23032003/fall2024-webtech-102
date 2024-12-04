@@ -49,7 +49,7 @@ export default function LegendsPage() {
 
             {/* Badge du rôle */}
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-              Pillar
+            Heeler
             </div>
 
             {/* Nom du joueur */}

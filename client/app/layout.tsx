@@ -17,7 +17,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <Navbar />
           <main>{children}</main>
         </div>
-        <Footer />
+        <div className='bg-blue-900'>
+          <Footer />
+        </div>
       </body>
     </html>
   );

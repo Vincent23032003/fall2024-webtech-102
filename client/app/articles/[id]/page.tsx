@@ -258,7 +258,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-6 space-y-8">
+    <main className="max-w-4xl mx-auto p-6 space-y-8 h-screen">
       {/* Article Section */}
       <section className="bg-white rounded-xl shadow-2xl p-8">
         <h1 className="text-4xl font-semibold text-gray-900">{article.title}</h1>
@@ -319,7 +319,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
             {error && <p className="text-red-500">{error}</p>}
             <button
               onClick={handleAddComment}
-              className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
             >
               Save Comment
             </button>
