@@ -86,7 +86,7 @@ export default function Footer() {
           <a href="https://flowbite.com/" className="hover:underline">
             ASM Clermont Auvergne
           </a>
-          . All Rights Reserved.
+          . All Rights Reserved. Web Technologies 2024 project.
         </span>
       </div>
     </footer>
