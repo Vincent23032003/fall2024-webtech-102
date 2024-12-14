@@ -352,7 +352,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
 
 
 
-            {/* Comments Section */}
+          {/* Comments Section */}
       <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
       <div className="mt-2">
         {comments.length > 0 ? (
@@ -384,44 +384,6 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
         <p className="text-sm text-gray-500 mt-2">You must be logged in to add a comment.</p>
       )}
 
-      {/* Comment Form */}
-      {showCommentForm && (
-        <div className="mt-4">
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-            className="w-full border rounded p-2"
-          />
-          {error && <p className="text-red-500">{error}</p>}
-          <button
-            onClick={handleAddComment}
-            className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Save Comment
-          </button>
-        </div>
-      )}
-
-<<<<<<< HEAD
-=======
-      {/* Comments Section */}
-        <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
-        <div className="mt-2">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="border-b border-gray-500 py-2">
-                <p className="text-black">{comment.content}</p>
-                <p className="text-sm text-gray-700">
-                  Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
-                  {comment.users?.username || "Unknown Author"}
-                </p>
-              </div>
-            ))
-          ) : (
-            <p className="text-black">No comments yet.</p>
-          )}
-        </div>
 
         {/* Comment Form */}
         <button
@@ -448,7 +410,6 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
             </button>
           </div>
         )}
->>>>>>> 457011c3ada88cbfc68976bb9846f02dbe76a987
       </section>
     </main>
   );
