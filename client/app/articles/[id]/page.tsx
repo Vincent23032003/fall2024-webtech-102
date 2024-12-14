@@ -384,15 +384,6 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
         <p className="text-sm text-gray-500 mt-2">You must be logged in to add a comment.</p>
       )}
 
-
-        {/* Comment Form */}
-        <button
-          onClick={() => setShowCommentForm(true)}
-          className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-          >
-          Add Comment
-        </button>
-
         {showCommentForm && (
           <div className="mt-4">
             <textarea
