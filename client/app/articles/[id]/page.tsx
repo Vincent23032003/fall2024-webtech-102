@@ -308,7 +308,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <main className="max-w-4xl mx-auto p-6 space-y-8">
+    <main className="max-w-4xl mx-auto p-6 space-y-8 h-screen">
       {/* Article Section */}
       <section className="bg-white rounded-xl shadow-2xl p-8">
         <h1 className="text-4xl font-semibold text-gray-900">{article.title}</h1>
@@ -403,6 +403,52 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
         </div>
       )}
 
+<<<<<<< HEAD
+=======
+      {/* Comments Section */}
+        <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
+        <div className="mt-2">
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="border-b border-gray-500 py-2">
+                <p className="text-black">{comment.content}</p>
+                <p className="text-sm text-gray-700">
+                  Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
+                  {comment.users?.username || "Unknown Author"}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-black">No comments yet.</p>
+          )}
+        </div>
+
+        {/* Comment Form */}
+        <button
+          onClick={() => setShowCommentForm(true)}
+          className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+          >
+          Add Comment
+        </button>
+
+        {showCommentForm && (
+          <div className="mt-4">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write a comment..."
+              className="w-full border rounded p-2"
+            />
+            {error && <p className="text-red-500">{error}</p>}
+            <button
+              onClick={handleAddComment}
+              className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+            >
+              Save Comment
+            </button>
+          </div>
+        )}
+>>>>>>> 457011c3ada88cbfc68976bb9846f02dbe76a987
       </section>
     </main>
   );

@@ -102,7 +102,7 @@ export default function BlogPage() {
             </svg>
           </button>
         ) : (
-          <p className="text-sm text-gray-500">Connectez-vous pour écrire un article.</p>
+          <p className="text-lg text-white">Login to write an article.</p>
         )}
         {isTooltipVisible && (
           <div
