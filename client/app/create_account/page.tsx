@@ -66,7 +66,7 @@ const CreateAccountPage = () => {
             birthDate,
             password: hashedPassword, // Mot de passe haché
             updatedAt: new Date(),
-            createdAt: new Date(),
+            created_at: new Date(),
             settings: {}, // Paramètres vides par défaut
           },
         ]);

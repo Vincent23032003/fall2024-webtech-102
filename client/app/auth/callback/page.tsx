@@ -20,7 +20,7 @@ export default function AuthCallback() {
         }
 
         if (session) {
-          router.push('/profile')
+          router.push('/settings')
         }
       } catch (error) {
         console.error('Erreur:', error)

@@ -16,34 +16,51 @@ export default function HomePage() {
     // Fonction pour récupérer l'utilisateur et ses détails supplémentaires
     const getUser = async () => {
       try {
-        // Récupère l'utilisateur connecté
         const { data: authData, error: authError } = await supabase.auth.getUser();
-
+    
         if (authError || !authData?.user) {
-          // Gestion propre des cas où aucune session n'est active
           console.warn("Aucun utilisateur connecté ou session manquante.");
           setUser(null);
         } else {
-          setUser(authData.user); // Stocke l'utilisateur dans l'état
-
-          // Récupérer les détails de l'utilisateur depuis la table 'users'
+          setUser(authData.user);
+    
+          // Rechercher l'utilisateur dans la table 'users'
           const { data, error } = await supabase
-            .from("users") // Assurez-vous que votre table s'appelle 'users'
-            .select("*") // Sélectionner toutes les colonnes ou des colonnes spécifiques comme 'name', 'avatar', etc.
-            .eq("id", authData.user.id) // Filtrer par l'ID de l'utilisateur connecté
-            .single(); // On prend seulement un utilisateur, car il est censé être unique
-
+            .from("users")
+            .select("*")
+            .eq("id", authData.user.id);
+    
           if (error) {
-            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
+            console.error("Erreur lors de la récupération des utilisateurs :", error.message);
+          } else if (data.length === 0) {
+            console.warn("Aucun utilisateur trouvé. Création...");
+            const { data: newUser, error: insertError } = await supabase
+              .from("users")
+              .insert({
+                id: authData.user.id,
+                email: authData.user.email,
+                created_at: new Date(),
+              })
+              .select()
+              .single();
+    
+            if (insertError) {
+              console.error("Erreur lors de la création de l’utilisateur :", insertError.message);
+            } else {
+              setUserDetails(newUser);
+            }
+          } else if (data.length > 1) {
+            console.warn("Plusieurs utilisateurs trouvés pour cet ID.");
           } else {
-            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
+            setUserDetails(data[0]);
           }
         }
       } catch (error) {
         console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
-        setUser(null); // Réinitialiser l'utilisateur en cas d'erreur
+        setUser(null);
       }
     };
+    
 
     getUser(); // Appel de la fonction pour récupérer l'utilisateur
   }, []);

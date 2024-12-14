@@ -20,6 +20,7 @@ export default function SettingsPage() {
   const [userDetails, setUserDetails] = useState<any>(null);
   const [formData, setFormData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(true); // Ajout pour l'état de chargement initial
   const [selectedAvatar, setSelectedAvatar] = useState(gravatarList[0]);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
@@ -40,62 +41,25 @@ export default function SettingsPage() {
     window.location.href = "/connexion"; // Rediriger vers la page de connexion
   };
 
-  useEffect(() => {
-    // Fonction pour récupérer l'utilisateur et ses détails supplémentaires
-    const getUser = async () => {
-      try {
-        // Récupère l'utilisateur connecté
-        const { data: authData, error: authError } = await supabase.auth.getUser();
-
-        if (authError || !authData?.user) {
-          // Gestion propre des cas où aucune session n'est active
-          console.warn("Aucun utilisateur connecté ou session manquante.");
-          setUser(null);
-        } else {
-          setUser(authData.user); // Stocke l'utilisateur dans l'état
-
-          // Récupérer les détails de l'utilisateur depuis la table 'users'
-          const { data, error } = await supabase
-            .from("users") // Assurez-vous que votre table s'appelle 'users'
-            .select("*") // Sélectionner toutes les colonnes ou des colonnes spécifiques comme 'name', 'avatar', etc.
-            .eq("id", authData.user.id) // Filtrer par l'ID de l'utilisateur connecté
-            .single(); // On prend seulement un utilisateur, car il est censé être unique
-
-          if (error) {
-            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
-          } else {
-            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
-
-            // Mettez à jour le formulaire avec les informations de l'utilisateur
-            setFormData({
-              username: data.username,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              email: data.email,
-              birthDate: data.birthDate,
-              avatarUrl: data.avatarUrl || gravatarList[0], // Utilise l'avatar de l'utilisateur ou un avatar par défaut
-            });
-            setSelectedAvatar(data.avatarUrl || gravatarList[0]);
-          }
-        }
-      } catch (error) {
-        console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
-        setUser(null); // Réinitialiser l'utilisateur en cas d'erreur
-      }
-    };
-
-    getUser(); // Appel de la fonction pour récupérer l'utilisateur
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData((prevState: any) => ({
-      ...prevState,
-      [id]: value,
-    }));
+  const validateForm = () => {
+    if (!formData.email || !formData.email.includes("@")) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
+    if (!formData.username || !formData.firstName || !formData.lastName) {
+      alert("All fields are required.");
+      return false;
+    }
+    if (new Date(formData.birthDate) > new Date()) {
+      alert("Birthdate cannot be in the future.");
+      return false;
+    }
+    return true;
   };
 
   const handleSave = async () => {
+    if (!validateForm()) return;
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -112,26 +76,110 @@ export default function SettingsPage() {
 
       if (error) {
         console.error("Erreur lors de la mise à jour :", error.message);
-        alert("Une erreur est survenue.");
+        alert("An error occurred while saving.");
       } else {
-        alert("Modifications successfully registered !");
+        alert("Modifications successfully registered!");
       }
     } catch (error) {
       console.error("Erreur :", error);
+      alert("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data: authData, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !authData?.user) {
+          console.warn("No user logged in or session missing.");
+          setUser(null);
+          setFetching(false);
+          return;
+        }
+
+        setUser(authData.user);
+
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", authData.user.id)
+          .single();
+
+        if (error) {
+          if (error.message.includes("JSON object requested, multiple (or no) rows returned")) {
+            console.warn("No user found in the 'users' table. Creating a new user...");
+            const { data: newUser, error: insertError } = await supabase
+              .from("users")
+              .insert({
+                id: authData.user.id,
+                email: authData.user.email || `${authData.user.id}@example.com`, // Email par défaut si manquant
+                username: authData.user.email
+                  ? authData.user.email.split("@")[0]
+                  : `user_${authData.user.id.substring(0, 8)}`, // Crée un username basé sur l'ID si l'email est absent
+                avatarUrl: gravatarList[0],
+                created_at: new Date(),
+              })
+              .select()
+              .single();
+
+
+            if (insertError) {
+              console.error("Error creating new user:", insertError.message);
+              setUserDetails(null);
+            } else {
+              setUserDetails(newUser);
+              setFormData({
+                username: newUser.username,
+                firstName: "",
+                lastName: "",
+                email: newUser.email,
+                birthDate: "",
+                avatarUrl: newUser.avatarUrl,
+              });
+              setSelectedAvatar(newUser.avatarUrl);
+            }
+          } else {
+            console.error("Error fetching user details:", error.message);
+          }
+        } else {
+          setUserDetails(data);
+          setFormData({
+            username: data.username,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            birthDate: data.birthDate,
+            avatarUrl: data.avatarUrl || gravatarList[0],
+          });
+          setSelectedAvatar(data.avatarUrl || gravatarList[0]);
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching user:", error);
+        setUser(null);
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    getUser();
+  }, []);
+
   return (
     <main>
-      {!user ? (
+      {fetching ? (
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-2xl text-gray-700">Loading...</p>
+        </div>
+      ) : !user ? (
         <div className="flex flex-col items-center mt-20 h-screen text-center">
           <h1 className="text-5xl font-bold text-red-600 mb-4">
             You are not currently connected.
           </h1>
           <p className="text-white text-2xl">
-            Sign in or create an account to access to this page.
+            Sign in or create an account to access this page.
           </p>
           <button
             onClick={() => (window.location.href = "/connexion")}
@@ -149,13 +197,12 @@ export default function SettingsPage() {
                 <div className="flex flex-col items-center justify-center mb-8">
                   <img
                     src={selectedAvatar}
-                    alt=""
+                    alt="Avatar"
                     className="w-48 h-48 rounded-full object-cover mb-4 bg-gray-200"
                   />
-
                   <button
                     onClick={openLibrary}
-                    className="w-5/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+                    className="w-5/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                   >
                     Change your gravatar
                   </button>
@@ -169,7 +216,7 @@ export default function SettingsPage() {
                           <img
                             key={index}
                             src={avatar}
-                            alt=""
+                            alt="Gravatar"
                             onClick={() => handleAvatarSelect(avatar)}
                             className="w-20 h-20 rounded-full object-cover cursor-pointer bg-gray-200"
                           />
@@ -184,74 +231,35 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 )}
-                <div className="flex flex-col mb-8">
-                  <div>
-                    <label htmlFor="username"  className="block text-sm font-medium text-gray-700">
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      id="username"
-                      value={formData.username || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="firstName" className="block mt-4 text-sm font-medium text-gray-700">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      value={formData.firstName || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block mt-4 text-sm font-medium text-gray-700">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      value={formData.lastName || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block mt-4 text-sm font-medium text-gray-700">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={formData.email || ""}
-                      onChange={handleInputChange}
-                      className="w-full  px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="birthDate" className="block mt-4 text-sm font-medium text-gray-700">
-                      Date of Birth
-                    </label>
-                    <input
-                      type="date"
-                      id="birthDate"
-                      value={formData.birthDate || ""}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                  </div>
+                <div className="flex flex-col">
+                  {["username", "firstName", "lastName", "email", "birthDate"].map((field, index) => (
+                    <div key={index} className="mb-4">
+                      <label htmlFor={field} className="block text-sm font-medium text-gray-700">
+                        {field === "birthDate" ? "Date of Birth" : field.charAt(0).toUpperCase() + field.slice(1)}
+                      </label>
+                      <input
+                        type={field === "birthDate" ? "date" : "text"}
+                        id={field}
+                        value={formData[field] || ""}
+                        onChange={(e) =>
+                          setFormData((prevState: any) => ({
+                            ...prevState,
+                            [field]: e.target.value,
+                          }))
+                        }
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="mt-2">
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className={`w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   {loading ? "Saving..." : "Save modifications"}
                 </button>
@@ -266,7 +274,7 @@ export default function SettingsPage() {
               </div>
             </div>
           ) : (
-            <p>Loading of user details...</p>
+            <p className="text-center">Loading user details...</p>
           )}
         </div>
       )}

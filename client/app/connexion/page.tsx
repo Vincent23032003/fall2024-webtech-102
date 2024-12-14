@@ -1,69 +1,45 @@
-//client/app/connexion/page.tsx :
-"use client"
+"use client";
 
-import Link from 'next/link';
-import React from 'react';
-import Image from 'next/image';
-import { useState } from "react";
-import { supabase } from "../../supabaseClient";
+import Link from "next/link";
+import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { supabase } from "../../utils/supabaseClient";
 
 const ConnexionPage = () => {
   const router = useRouter();
 
+  // États pour la connexion classique (email/password)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Connexion avec email/mot de passe
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
       setError(null);
-      setSuccess(false);
 
       if (!email.includes("@")) {
         setError("Email invalide.");
         return;
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      console.log("Data:", data);
-      console.log("Error:", error);
 
       if (error) {
         setError("Email ou mot de passe incorrect.");
         return;
       }
 
-      // Utiliser `supabase.auth.getUser()` pour récupérer l'utilisateur connecté
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-
-      if (userError) {
-        setError("Erreur lors de la récupération des données de l'utilisateur.");
-        return;
-      }
-
-      // Vérifier si userData contient un utilisateur
-      if (userData && userData.user) {
-        console.log("ID de l'utilisateur connecté :", userData.user.id); // Accéder à l'ID de l'utilisateur
-        // Tu peux maintenant utiliser `userData.user.id` pour effectuer des actions spécifiques à cet utilisateur
-      }
-
-      setSuccess(true);
-      setEmail("");
-      setPassword("");
-
-      router.push("/"); // Redirection après connexion
+      // Redirection après connexion réussie
+      router.push("/settings");
     } catch (err: any) {
       setError("Une erreur est survenue.");
     } finally {
@@ -71,12 +47,29 @@ const ConnexionPage = () => {
     }
   };
 
+  // Connexion avec GitHub
+  const handleGithubLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+
+      if (error) {
+        console.error("GitHub login error:", error.message);
+        setError("Erreur lors de la connexion avec GitHub.");
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("Une erreur est survenue avec GitHub.");
+    }
+  };
 
   return (
-    <div className='h-screen'>
+    <div className="h-screen">
       <div className="max-w-md mx-auto m-10 bg-white p-6 rounded-lg shadow-md">
-        <div className='grid grid-cols-3 m-4'>
-          <div className='flex justify-center items-center'>
+        <div className="grid grid-cols-3 m-4">
+          <div className="flex justify-center items-center">
             <Image
               src="/assets/Logo_ASM.svg"
               width={90}
@@ -85,9 +78,9 @@ const ConnexionPage = () => {
             />
           </div>
           <div className="text-2xl font-bold mb-6 text-center text-gray-800">
-            Back to the Yellow Army !
+            Back to the Yellow Army!
           </div>
-          <div className='flex justify-center items-center'>
+          <div className="flex justify-center items-center">
             <Image
               src="/assets/Logo_ASM.svg"
               width={90}
@@ -97,6 +90,7 @@ const ConnexionPage = () => {
           </div>
         </div>
 
+        {/* Formulaire de connexion classique */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-lg font-medium text-gray-700">
@@ -133,29 +127,35 @@ const ConnexionPage = () => {
             className="w-full mb-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Connection in progress..." : "Sign in"}
+            {isSubmitting ? "Connecting..." : "Sign in"}
           </button>
         </form>
+
+        {/* Connexion avec GitHub */}
+        <div className="text-center my-4">
+          <p className="text-gray-700 mb-4">OR</p>
+          <button
+            onClick={handleGithubLogin}
+            className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+          >
+            Sign in with GitHub
+          </button>
+        </div>
+
         <span className="mt-6 text-center">
-          <p className="text-base text-gray-600 mb-2">
-            Don't have an account ?
-          </p>
-          <Link href="/create_account" className="w-full flex justify-center bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2">
+          <p className="text-base text-gray-600 mb-2">Don't have an account?</p>
+          <Link
+            href="/create_account"
+            className="w-full flex justify-center bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+          >
             Create an account
           </Link>
         </span>
       </div>
 
-      {success && (
-        <p className="mt-4 text-green-600 text-center">
-          Connexion réussie ! Vous êtes maintenant connecté.
-        </p>
-      )}
-
+      {/* Messages d'erreur */}
       {error && (
-        <p className="mt-4 text-red-600 text-center">
-          {error}
-        </p>
+        <p className="mt-4 text-red-600 text-center">{error}</p>
       )}
     </div>
   );

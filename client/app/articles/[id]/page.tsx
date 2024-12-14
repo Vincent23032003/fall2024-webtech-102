@@ -38,7 +38,22 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasLiked, setHasLiked] = useState<boolean>(false); // Vérifier si l'utilisateur a déjà liké l'article
+  const [user, setUser] = useState<any>(null); // Stocker l'utilisateur connecté
   const router = useRouter();
+
+  // Vérifier si un utilisateur est connecté
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        setUser(null); // Aucun utilisateur connecté
+      } else {
+        setUser(user); // Utilisateur connecté
+      }
+    };
+    fetchUser();
+  }, []);
+
 
   // Fetch article
   useEffect(() => {
@@ -153,13 +168,10 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
     setError(null);
 
     try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        throw new Error("Unauthenticated user.");
+        throw new Error("You must be logged in to add a comment.");
       }
 
       const authorId = user.id;
@@ -187,66 +199,104 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
 
   // Fonction pour liker l'article
   const handleLikeArticle = async () => {
-    console.log("Trying to like article...");
+    if (!user) {
+      setError("You must be logged in to like the article."); // Message d'erreur si non connecté
+      console.log("User not authenticated.");
+      return;
+    }
+  
+    if (!article) {
+      setError("Article not found."); // Message d'erreur si l'article est null
+      console.log("Article is null.");
+      return;
+    }
+  
     setError(null);
   
     try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
-        console.log("User not authenticated.");
-        throw new Error("Unauthenticated user.");
-      }
-      console.log("User is authenticated", user);
-  
-      // Vérifier si l'article existe avant de procéder à l'incrémentation
-      if (!article) {
-        console.log("Article not found.");
-        throw new Error("Article not found.");
-      }
-  
+      // Vérifier si l'utilisateur a déjà liké l'article
       if (hasLiked) {
-        console.log("User has already liked this article.");
-        throw new Error("You have already liked this article.");
-      }
+        console.log("Removing like...");
+        
+        // Supprimer le like de la table "likes"
+        const { error: unlikeError } = await supabase
+          .from("likes")
+          .delete()
+          .eq("articleid", articleId)
+          .eq("authorid", user.id);
   
-      const { error: likeError } = await supabase.from("likes").insert({
-        articleid: articleId,
-        authorid: user.id,
-      });
+        if (unlikeError) {
+          console.log("Error removing like", unlikeError);
+          throw unlikeError;
+        }
   
-      if (likeError) {
-        console.log("Error inserting like", likeError);
-        throw likeError;
-      }
+        // Décrémenter le compteur de likes dans la table "articles"
+        const { data, error } = await supabase
+          .from("articles")
+          .update({ likes: article.likes - 1 })
+          .eq("id", articleId)
+          .select();
   
-      const { data, error } = await supabase
-        .from("articles")
-        .update({ likes: article.likes + 1 })
-        .eq("id", articleId)
-        .select();
+        if (error) {
+          console.log("Error updating article likes", error);
+          throw error;
+        }
   
-      if (error) {
-        console.log("Error updating article likes", error);
-        throw error;
-      }
+        // Mettre à jour l'état local
+        if (data && data[0]) {
+          setArticle((prevArticle) =>
+            prevArticle ? { ...prevArticle, likes: data[0].likes } : null
+          );
+          setHasLiked(false); // L'utilisateur peut à nouveau liker
+          console.log("Like removed successfully.");
+        }
+      } else {
+        console.log("Adding like...");
   
-      if (data && data[0]) {
-        setArticle(prevArticle => prevArticle ? { ...prevArticle, likes: data[0].likes } : null);
-        setHasLiked(true);
-        console.log("Like successful", data[0].likes);
+        // Ajouter un like dans la table "likes"
+        const { error: likeError } = await supabase.from("likes").insert({
+          articleid: articleId,
+          authorid: user.id,
+        });
+  
+        if (likeError) {
+          console.log("Error inserting like", likeError);
+          throw likeError;
+        }
+  
+        // Incrémenter le compteur de likes dans la table "articles"
+        const { data, error } = await supabase
+          .from("articles")
+          .update({ likes: article.likes + 1 })
+          .eq("id", articleId)
+          .select();
+  
+        if (error) {
+          console.log("Error updating article likes", error);
+          throw error;
+        }
+  
+        // Mettre à jour l'état local
+        if (data && data[0]) {
+          setArticle((prevArticle) =>
+            prevArticle ? { ...prevArticle, likes: data[0].likes } : null
+          );
+          setHasLiked(true); // L'utilisateur a liké
+          console.log("Like added successfully.");
+        }
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message || "Error liking article.");
-        console.log("Error liking article", err.message);
+        setError(err.message || "Error liking/unliking article.");
+        console.log("Error liking/unliking article", err.message);
       } else {
-        // Si l'erreur n'est pas une instance de Error
         setError("An unexpected error occurred.");
         console.log("Unexpected error", err);
       }
     }
-    
   };
+  
+  
   
 
   if (loading) {
@@ -269,62 +319,90 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
         <div className="mt-6 text-black">{article.description}</div>
 
         {/* Like Button with Counter */}
-        <div className="flex items-center mt-4 space-x-2">
-          <button
-            onClick={handleLikeArticle}
-            className={`text-red-600 flex items-center ${hasLiked ? 'cursor-not-allowed opacity-50 animate-bounce animate-twice' : ''}`}
-            disabled={hasLiked} // Désactiver le bouton si l'utilisateur a déjà liké
+      <div className="flex items-center mt-4 space-x-2">
+        <button
+          onClick={handleLikeArticle}
+          className={`text-red-600 flex items-center ${
+            !user ? "cursor-not-allowed opacity-50" : "" // Grisé si pas connecté
+          }`}
+          disabled={!user} // Désactiver si pas connecté
+        >
+          <span>{article.likes}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill={hasLiked ? "red" : "none"} // Remplir l'icône si l'article est liké
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
           >
-            <span>{article.likes}</span> 
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-            </svg>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+            />
+          </svg>
+        </button>
+        {!user && (
+          <p className="text-sm text-gray-500">
+            You must be logged in to like the article.
+          </p>
+        )}
+      </div>
+
+
+
+            {/* Comments Section */}
+      <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
+      <div className="mt-2">
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.id} className="border-b border-gray-500 py-2">
+              <p className="text-black">{comment.content}</p>
+              <p className="text-sm text-gray-700">
+                Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
+                {comment.users?.username || "Unknown Author"}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-black">No comments yet.</p>
+        )}
+      </div>
+
+      {/* Add Comment Button */}
+      <button
+        onClick={() => user && setShowCommentForm(true)}
+        className={`w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${
+          !user ? "cursor-not-allowed opacity-50" : ""
+        }`}
+        disabled={!user} // Désactiver si pas connecté
+      >
+        Add Comment
+      </button>
+      {!user && (
+        <p className="text-sm text-gray-500 mt-2">You must be logged in to add a comment.</p>
+      )}
+
+      {/* Comment Form */}
+      {showCommentForm && (
+        <div className="mt-4">
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write a comment..."
+            className="w-full border rounded p-2"
+          />
+          {error && <p className="text-red-500">{error}</p>}
+          <button
+            onClick={handleAddComment}
+            className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Save Comment
           </button>
         </div>
+      )}
 
-      {/* Comments Section */}
-        <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
-        <div className="mt-2">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="border-b border-gray-500 py-2">
-                <p className="text-black">{comment.content}</p>
-                <p className="text-sm text-gray-700">
-                  Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
-                  {comment.users?.username || "Unknown Author"}
-                </p>
-              </div>
-            ))
-          ) : (
-            <p className="text-black">No comments yet.</p>
-          )}
-        </div>
-
-        {/* Comment Form */}
-        <button
-          onClick={() => setShowCommentForm(true)}
-          className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-          >
-          Add Comment
-        </button>
-
-        {showCommentForm && (
-          <div className="mt-4">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Write a comment..."
-              className="w-full border rounded p-2"
-            />
-            {error && <p className="text-red-500">{error}</p>}
-            <button
-              onClick={handleAddComment}
-              className="mt-4 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Save Comment
-            </button>
-          </div>
-        )}
       </section>
     </main>
   );

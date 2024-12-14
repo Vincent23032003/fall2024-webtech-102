@@ -30,38 +30,32 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const getUser = async () => {
+    // Fonction pour récupérer les détails utilisateur
+    const fetchUserDetails = async () => {
+      if (!user) return; // Pas d'utilisateur connecté
+
       try {
-        // Récupère l'utilisateur connecté
-        const { data: authData, error: authError } = await supabase.auth.getUser();
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", user.id) // Filtrer par ID unique
+          .single(); // Forcer un seul résultat
 
-        if (authError || !authData?.user) {
-          console.warn("Aucun utilisateur connecté ou session manquante.");
-          setUser(null);
-        } else {
-          setUser(authData.user); // Stocke l'utilisateur dans l'état
-
-          // Récupérer les détails de l'utilisateur depuis la table 'users'
-          const { data, error } = await supabase
-            .from("users")
-            .select("*")
-            .eq("id", authData.user.id)
-            .single();
-
-          if (error) {
-            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
-          } else {
-            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
-            setSelectedAvatar(data.avatarUrl);
-          }
+        if (error) {
+          console.error("Erreur lors de la récupération des détails de l'utilisateur :", error.message);
+          setError("Impossible de récupérer les informations utilisateur.");
+          return;
         }
-      } catch (error) {
-        console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
-        setUser(null);
+
+        setUserDetails(data); // Stocke les détails dans l'état
+      } catch (err) {
+        console.error("Une erreur inattendue s'est produite :", err);
+        setError("Une erreur inattendue s'est produite.");
       }
     };
-    getUser();
-  }, []);
+
+    fetchUserDetails();
+  }, [user]);
 
   return (
     <nav className="text-white p-4 w-full">
@@ -208,3 +202,7 @@ export default function Navbar() {
     </nav>
   );
 }
+function setError(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

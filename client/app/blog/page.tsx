@@ -30,18 +30,20 @@ export default function BlogPage() {
   // Vérifier l'utilisateur connecté
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Erreur lors de la récupération de l'utilisateur :", error.message);
-        setUser(null);
+      const { data: { user } } = await supabase.auth.getUser();
+  
+      if (user) {
+        // L'utilisateur est connecté
+        setUser(user);
       } else {
-        setUser(user); // Assigner l'utilisateur si connecté
+        // Aucun utilisateur connecté
+        setUser(null);
       }
     };
-
+  
     checkUser();
   }, []);
-
+  
   // Récupérer les articles
   useEffect(() => {
     const fetchArticles = async () => {
