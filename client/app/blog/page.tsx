@@ -22,10 +22,13 @@ type Article = {
 
 export default function BlogPage() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null); // Utilisation explicite de User | null
   const router = useRouter();
+  const [showSearch, setShowSearch] = useState(false);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const articlesPerPage = 5;
@@ -88,6 +91,10 @@ export default function BlogPage() {
     fetchArticles();
   }, [currentPage]);
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value.toLowerCase());
+  };
+
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -110,23 +117,33 @@ export default function BlogPage() {
         {/* Bouton "Écrire un article" */}
         <span className="relative">
           {user ? (
-            <button
-              onClick={handleWriteArticle}
-              onMouseEnter={() => setIsTooltipVisible(true)}
-              onMouseLeave={() => setIsTooltipVisible(false)}
+            <div className="flex justify-between">
+              <button 
               className="text-white px-4 hover:animate-rotate-y"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-11">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-            </button>
+              onClick={() => setShowSearch(!showSearch)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-11">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+              </button>
+              <button
+                onClick={handleWriteArticle}
+                onMouseEnter={() => setIsTooltipVisible(true)}
+                onMouseLeave={() => setIsTooltipVisible(false)}
+                className="text-white px-4 hover:animate-rotate-y"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-11">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </button>
+            </div>
           ) : (
             <p className="text-lg text-white">Login to write an article.</p>
           )}
           {isTooltipVisible && (
             <div
               role="tooltip"
-              className="absolute z-10 left-auto px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
+              className="absolute z-10 left-1/2 mt-2 px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
             >
               Write a new article !
               <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
@@ -134,64 +151,121 @@ export default function BlogPage() {
           )}
         </span>
       </div>
-
+      <div className="mb-4">
+        {showSearch &&
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by title..."
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        }
+      </div>
       {loading ? (
         <p className="text-white text-lg">Loading...</p>
       ) : articles.length === 0 ? (
         <p>Aucun article disponible pour le moment.</p>
       ) : (
         <div className="space-y-8">
-          {articles.map((article) => (
-            <div key={article.id} className="p-6 bg-white shadow-md rounded-lg animate-fade-up">
-              <h2 className="text-2xl font-bold text-gray-800">{article.title}</h2>
-              <p className="text-sm text-gray-500">
-                Publié le {new Date(article.created_date).toLocaleDateString()} par{" "}
-                {article.users?.username || "Auteur inconnu"}
-              </p>
-              <p className="mt-4 text-gray-700">{article.description.slice(0, 150)}...</p>
-              <div className="mt-6 flex items-center space-x-4">
-                <button className="flex inline-block text-red-600">
-                  {article.likes}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => router.push(`/articles/${article.id}`)}
-                  className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-                >
-                  Lire l'article
-                </button>
+          {articles
+            .filter((article) => {
+              return searchTerm.toLowerCase() === ''
+                ? <p>No results found</p>  // Return true instead of article for empty search
+                : article.title.toLowerCase().includes(searchTerm.toLowerCase());
+            })
+            .map((article) => (
+              <div
+                key={article.id}
+                className="p-6 bg-white shadow-md rounded-lg animate-fade-up animate-once"
+              >
+                <h2 className="text-2xl font-bold text-gray-800">{article.title}</h2>
+                <p className="text-sm text-gray-500">
+                  Publié le {new Date(article.created_date).toLocaleDateString()} par{" "}
+                  {article.users?.username || "Auteur inconnu"}
+                </p>
+                <p className="mt-4 text-gray-700">{article.description.slice(0, 150)}...</p>
+                <div className="mt-6 flex items-center space-x-4">
+                  <button className="flex inline-block text-red-600">
+                    {article.likes}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => router.push(`/articles/${article.id}`)}
+                    className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+                  >
+                    Lire l'article
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
           <div className="flex justify-between items-center mt-4">
-            <button 
-            onClick={handlePrevPage} 
-            className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
-              currentPage === 1 ? "cursor-not-allowed opacity-50" : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-            }`}
-            disabled={currentPage === 1}>
-              <svg className="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
+            <button
+              onClick={handlePrevPage}
+              className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === 1
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+                }`}
+              disabled={currentPage === 1}
+            >
+              <svg
+                className="w-3.5 h-3.5 me-2 rtl:rotate-180"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 5H1m0 0 4 4M1 5l4-4"
+                />
               </svg>
               Previous
             </button>
             <span className="text-xl font-bold text-white">
-              Page {currentPage} on  {totalPages}
+              Page {currentPage} on {totalPages}
             </span>
-            <button 
-            onClick={handleNextPage} 
-            disabled={currentPage === totalPages}
-            className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
-              currentPage === totalPages ? "cursor-not-allowed opacity-50" : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-            }`}>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === totalPages
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+                }`}
+            >
               Next
-              <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+              <svg
+                className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                />
               </svg>
             </button>
-
           </div>
         </div>
       )}
