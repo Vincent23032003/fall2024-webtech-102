@@ -155,6 +155,7 @@ export default function SettingsPage() {
             avatarUrl: data.avatarUrl || gravatarList[0],
           });
           setSelectedAvatar(data.avatarUrl || gravatarList[0]);
+          
         }
       } catch (error) {
         console.error("An error occurred while fetching user:", error);
@@ -166,7 +167,6 @@ export default function SettingsPage() {
 
     getUser();
   }, []);
-
   return (
     <main>
       {fetching ? (
@@ -197,7 +197,6 @@ export default function SettingsPage() {
                 <div className="flex flex-col items-center justify-center mb-8">
                   <img
                     src={selectedAvatar}
-                    alt="Avatar"
                     className="w-48 h-48 rounded-full object-cover mb-4 bg-gray-200"
                   />
                   <button
@@ -216,7 +215,6 @@ export default function SettingsPage() {
                           <img
                             key={index}
                             src={avatar}
-                            alt="Gravatar"
                             onClick={() => handleAvatarSelect(avatar)}
                             className="w-20 h-20 rounded-full object-cover cursor-pointer bg-gray-200"
                           />

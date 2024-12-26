@@ -10,6 +10,14 @@ export default function Navbar() {
 
   const gravatarList = [
     "https://gravatar.com/avatar/fb6d18d4bb9824850e8dfbe24d87809a?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/a8bc016c863eebaa9c1f7d6a3599ed54?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/3d2da74f67c0737bd4eaeb8178b8a62f?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/8d4b50ebd7b5c6671b70ac19a66c75de?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/1795377143f83fa72bddf4eb9503c9fa?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/2d9d9ca28b140d6693f88f275237a02a?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/d80b64c1976ab3241189805dca72f004?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/6b8571d69aa7bb4aa21b7e370d6e6846?s=400&d=robohash&r=x",
+    "https://gravatar.com/avatar/a1c64b32bb2a092e17e439b8f58203b4?s=400&d=robohash&r=x",
   ];
 
   const [profile, setProfile] = useState<{ username: string; email: string } | null>(null);
@@ -30,33 +38,38 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    // Fonction pour récupérer les détails utilisateur
-    const fetchUserDetails = async () => {
-      if (!user) return; // Pas d'utilisateur connecté
-
+    const getUser = async () => {
       try {
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", user.id) // Filtrer par ID unique
-          .single(); // Forcer un seul résultat
 
-        if (error) {
-          console.error("Erreur lors de la récupération des détails de l'utilisateur :", error.message);
-          setError("Impossible de récupérer les informations utilisateur.");
-          return;
+        // Récupère l'utilisateur connecté
+        const { data: authData, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !authData?.user) {
+          console.warn("Aucun utilisateur connecté ou session manquante.");
+          setUser(null);
+        } else {
+          setUser(authData.user); // Stocke l'utilisateur dans l'état
+          // Récupérer les détails de l'utilisateur depuis la table 'users'
+          const { data, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", authData.user.id)
+            .single();
+
+          if (error) {
+            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
+          } else {
+            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
+            setSelectedAvatar(data.avatarUrl);
+          }
         }
-
-        setUserDetails(data); // Stocke les détails dans l'état
-      } catch (err) {
-        console.error("Une erreur inattendue s'est produite :", err);
-        setError("Une erreur inattendue s'est produite.");
+      } catch (error) {
+        console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
+        setUser(null);
       }
     };
-
-    fetchUserDetails();
-  }, [user]);
-
+    getUser();
+  }, []);
   return (
     <nav className="text-white p-4 w-full">
       <div className="w-full l-full container flex justify-between items-center mx-auto">
@@ -156,37 +169,36 @@ export default function Navbar() {
               <div
                 role="tooltip"
                 className="absolute z-10 mt-20 px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
-                >
-                  Settings
-                  <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
-                </div>
-              )}
-              {user ? (
-                <Link
-                  onMouseEnter={() => setIsTooltipVisible1(true)}
-                  onMouseLeave={() => setIsTooltipVisible1(false)}
-                  href="/connexion"
-                  className="flex inline-block hover:animate-rotate-y"
-                >
-                  <img
-                    src={selectedAvatar}
-                    alt=""
-                    className="w-20 h-15 rounded-full object-cover mb-4 bg-gray-200"
-                  />
-                </Link>
-              ) : (
+              >
+                Settings
+                <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
+              </div>
+            )}
+            {user ? (
+              <Link
+                onMouseEnter={() => setIsTooltipVisible1(true)}
+                onMouseLeave={() => setIsTooltipVisible1(false)}
+                href="/connexion"
+                className="flex inline-block hover:animate-rotate-y"
+              >
+                <img
+                  src={selectedAvatar}
+                  className="w-20 h-15 rounded-full object-cover mb-4 bg-gray-200"
+                />
+              </Link>
+            ) : (
 
-                <Link
-                  onMouseEnter={() => setIsTooltipVisible1(true)}
-                  onMouseLeave={() => setIsTooltipVisible1(false)}
-                  href="/connexion"
-                  className="flex inline-block hover:animate-rotate-y"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  </svg>
-                </Link>
-              )}
+              <Link
+                onMouseEnter={() => setIsTooltipVisible1(true)}
+                onMouseLeave={() => setIsTooltipVisible1(false)}
+                href="/connexion"
+                className="flex inline-block hover:animate-rotate-y"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+              </Link>
+            )}
             {isTooltipVisible1 && (
               <div
                 role="tooltip"
@@ -202,7 +214,3 @@ export default function Navbar() {
     </nav>
   );
 }
-function setError(arg0: string) {
-  throw new Error('Function not implemented.');
-}
-
