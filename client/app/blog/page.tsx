@@ -26,12 +26,15 @@ export default function BlogPage() {
   const [user, setUser] = useState<User | null>(null); // Utilisation explicite de User | null
   const router = useRouter();
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const articlesPerPage = 5;
 
   // Vérifier l'utilisateur connecté
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-  
+
       if (user) {
         // L'utilisateur est connecté
         setUser(user);
@@ -40,15 +43,17 @@ export default function BlogPage() {
         setUser(null);
       }
     };
-  
+
     checkUser();
   }, []);
-  
+
   // Récupérer les articles
   useEffect(() => {
     const fetchArticles = async () => {
+      setLoading(true);
       try {
-        const { data, error } = await supabase
+        const offset = (currentPage - 1) * articlesPerPage;
+        const { data, error, count } = await supabase
           .from("articles")
           .select(`
             id,
@@ -59,13 +64,17 @@ export default function BlogPage() {
             comments,
             created_date,
             users (username)
-          `)
-          .order("created_date", { ascending: false });
+          `,
+            { count: "exact" }
+          )
+          .order("created_date", { ascending: false })
+          .range(offset, offset + articlesPerPage - 1);
 
         if (error) {
           console.error("Erreur lors de la récupération des articles :", error.message);
         } else if (data && Array.isArray(data)) {
           setArticles(data as unknown as Article[]);
+          setTotalPages(Math.ceil((count || 0) / articlesPerPage));
         } else {
           console.warn("Les données reçues ne correspondent pas à la structure attendue.");
         }
@@ -77,7 +86,17 @@ export default function BlogPage() {
     };
 
     fetchArticles();
-  }, []);
+  }, [currentPage]);
+
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  // Gestion de la pagination
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
 
   // Fonction pour rediriger vers la page "Écrire un article"
   const handleWriteArticle = () => {
@@ -90,29 +109,29 @@ export default function BlogPage() {
         <h1 className="text-4xl font-extrabold leading-none tracking-tight text-white">Blog</h1>
         {/* Bouton "Écrire un article" */}
         <span className="relative">
-        {user ? (
-          <button
-          onClick={handleWriteArticle}
-          onMouseEnter={() => setIsTooltipVisible(true)}
-          onMouseLeave={() => setIsTooltipVisible(false)}
-          className="text-white px-4 hover:animate-rotate-y"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-11">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-          </button>
-        ) : (
-          <p className="text-lg text-white">Login to write an article.</p>
-        )}
-        {isTooltipVisible && (
-          <div
-          role="tooltip"
-          className="absolute z-10 left-auto px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
-          >
-            Write a new article !
-            <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
-          </div>
-        )}
+          {user ? (
+            <button
+              onClick={handleWriteArticle}
+              onMouseEnter={() => setIsTooltipVisible(true)}
+              onMouseLeave={() => setIsTooltipVisible(false)}
+              className="text-white px-4 hover:animate-rotate-y"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-11">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </button>
+          ) : (
+            <p className="text-lg text-white">Login to write an article.</p>
+          )}
+          {isTooltipVisible && (
+            <div
+              role="tooltip"
+              className="absolute z-10 left-auto px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
+            >
+              Write a new article !
+              <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
+            </div>
+          )}
         </span>
       </div>
 
@@ -146,6 +165,34 @@ export default function BlogPage() {
               </div>
             </div>
           ))}
+          <div className="flex justify-between items-center mt-4">
+            <button 
+            onClick={handlePrevPage} 
+            className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
+              currentPage === 1 ? "cursor-not-allowed opacity-50" : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+            }`}
+            disabled={currentPage === 1}>
+              <svg className="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
+              </svg>
+              Previous
+            </button>
+            <span className="text-xl font-bold text-white">
+              Page {currentPage} on  {totalPages}
+            </span>
+            <button 
+            onClick={handleNextPage} 
+            disabled={currentPage === totalPages}
+            className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
+              currentPage === totalPages ? "cursor-not-allowed opacity-50" : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+            }`}>
+              Next
+              <svg className="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+              </svg>
+            </button>
+
+          </div>
         </div>
       )}
     </main>
