@@ -4,8 +4,8 @@ import Image from 'next/image';
 export default function Footer() {
   return (
     <footer className="bg-blue-900 rounded-lg shadow">
-      <div className="w-full max-w-screen-xl p-4">
-        <div className="sm:flex sm:items-center sm:justify-between">
+      <div className="w-full p-4">
+        <div className="flex items-center justify-between">
           <a
             href="/"
             className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"

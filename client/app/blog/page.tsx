@@ -171,7 +171,7 @@ export default function BlogPage() {
           {articles
             .filter((article) => {
               return searchTerm.toLowerCase() === ''
-                ? <p>No results found</p>  // Return true instead of article for empty search
+                ? true  // Return true instead of article for empty search
                 : article.title.toLowerCase().includes(searchTerm.toLowerCase());
             })
             .map((article) => (

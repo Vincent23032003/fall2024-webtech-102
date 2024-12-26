@@ -159,7 +159,7 @@ export default function HomePage() {
             <span className="grid grid-cols-3 m-2">
               <div>
                 <Image
-                  src="/assets/stade-rochelais.png"
+                  src="/assets/Stade_rochelais.png"
                   width={120}
                   height={90}
                   alt="stade-rochelais-logo"
