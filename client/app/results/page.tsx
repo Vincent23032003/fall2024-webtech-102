@@ -1,239 +1,172 @@
-import React from "react"
-import Image from "next/image"
-import "aos/dist/aos.css";
-import AOS from "aos";
+"use client";
 
-export default function awardsPage() {
-    return (
-        <div>
-            <h2 className="m-4 text-4xl font-extrabold leading-none tracking-tight text-white">Results</h2>
-            <p className="ml-16 text-lg font-normal text-white">All results of ASM this season are listed here, including French Championship and Champions Cup. </p>
-            <div className="gap-4 p-4">
-                <div className="h-44 m-4">
-                    <div className="w-full h-full bg-white animate-fade-left rounded-lg shadow-md flex items-center mb-4">
-                        {/* Left Section */}
-                        <div className="flex flex-col justify-center items-center w-2/5 h-full bg-gray-200 p-4 text-center rounded-l-lg">
-                            <p className="text-3xl font-bold text-blue-900">TOP 14</p>
-                            <p className="text-lg font-bold mt-2">21 déc. 2024 à 14H30</p>
-                            <p className="text-lg text-black mt-1">Stade Marcel-Deflandre</p>
-                        </div>
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../supabaseClient";
 
-                        {/* Right Section */}
-                        <div className="flex items-center w-4/5 p-4 bg-white rounded-lg">
-                            {/* Team 1 */}
-                            <div className="flex-1 flex items-center justify-end pr-4">
-                                <Image
-                                    src="/assets/Stade_rochelais.png" // Replace with your actual image URL
-                                    alt="Stade Rochelais Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                                <p className="ml-2 text-lg">Stade Rochelais</p>
-                            </div>
+type Team = {
+  id: string;
+  team_name: string;
+  matches_played: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  points: number;
+  rank: number;
+  bonus_points: number;
+  point_difference: number;
+  logo_url: string;
+};
 
-                            {/* Score */}
-                            <div className="flex items-center">
-                                <p className="text-2xl font-bold">20</p>
-                                <p className="mx-4 text-lg font-semibold text-gray-700">-</p>
-                                <p className="text-2xl">15</p>
-                            </div>
+type Match = {
+  id: string;
+  home_team: string;
+  away_team: string;
+  home_score: number | null;
+  away_score: number | null;
+  match_date: string;
+  week_number: number;
+};
 
-                            {/* Team 2 */}
-                            <div className="flex-1 flex items-center justify-start pl-4">
-                                <p className="ml-2 text-lg">ASM Clermont Auvergne</p>
-                                <Image
-                                    src="/assets/Logo_ASM.svg" // Replace with your actual image URL
-                                    alt="ASM Clermont Auvergne Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                            </div>
-                        </div>
-                    </div>
+export default function ResultsPage() {
+  const [standings, setStandings] = useState<Team[]>([]);
+  const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter(); // Utilisation de useRouter pour la navigation
+
+  // Fetch data from Supabase
+  useEffect(() => {
+    const fetchStandings = async () => {
+      try {
+        const { data: standingsData, error: standingsError } = await supabase
+          .from("standings")
+          .select("*")
+          .order("rank", { ascending: true });
+
+        if (standingsError) {
+          console.error("Error fetching standings:", standingsError.message);
+        } else {
+          setStandings(standingsData || []);
+        }
+      } catch (err) {
+        console.error("Unexpected error fetching standings:", err);
+      }
+    };
+
+    const fetchUpcomingMatches = async () => {
+      try {
+        const { data: upcomingMatchesData, error: upcomingMatchesError } = await supabase
+          .from("matches")
+          .select("*")
+          .eq("week_number", 13) // Prochaines rencontres
+          .order("match_date", { ascending: true });
+
+        if (upcomingMatchesError) {
+          console.error("Error fetching upcoming matches:", upcomingMatchesError.message);
+        } else {
+          setUpcomingMatches(upcomingMatchesData || []);
+        }
+      } catch (err) {
+        console.error("Unexpected error fetching upcoming matches:", err);
+      }
+    };
+
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchStandings();
+      await fetchUpcomingMatches();
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <main className="max-w-6xl mx-auto p-6">
+      <h1 className="text-3xl font-bold text-white mb-6">Top 14 Results & Standings</h1>
+
+      {loading ? (
+        <p className="text-white">Loading...</p>
+      ) : (
+        <>
+          {/* Classement */}
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-white mb-4">Standings</h2>
+            <table className="w-full bg-white text-black rounded-lg shadow-lg">
+              <thead>
+                <tr>
+                  <th className="p-3 text-left">Rank</th>
+                  <th className="p-3 text-left">Logo</th>
+                  <th className="p-3 text-left">Team</th>
+                  <th className="p-3 text-left">Matches Played</th>
+                  <th className="p-3 text-left">Wins</th>
+                  <th className="p-3 text-left">Losses</th>
+                  <th className="p-3 text-left">Draws</th>
+                  <th className="p-3 text-left">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {standings.map((team) => (
+                  <tr key={team.id} className="hover:bg-gray-100">
+                    <td className="p-3">{team.rank}</td>
+                    <td className="p-3">
+                      <img
+                        src={team.logo_url}
+                        alt={`${team.team_name} logo`}
+                        className="w-10 h-10 object-contain"
+                      />
+                    </td>
+                    <td className="p-3">{team.team_name}</td>
+                    <td className="p-3">{team.matches_played}</td>
+                    <td className="p-3">{team.wins}</td>
+                    <td className="p-3">{team.losses}</td>
+                    <td className="p-3">{team.draws}</td>
+                    <td className="p-3 font-bold">{team.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+
+          {/* Prochaines rencontres */}
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-white mb-4">Upcoming Matches - Week 13</h2>
+            <div className="space-y-4">
+              {upcomingMatches.map((match) => (
+                <div key={match.id} className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
+                  <div className="flex items-center space-x-4">
+                    <img
+                      src={`/clubs/${match.home_team.toLowerCase().replace(/\s/g, '-')}.png`}
+                      alt={`${match.home_team} logo`}
+                      className="w-10 h-10"
+                    />
+                    <span className="text-lg font-semibold text-black">{match.home_team}</span>
+                  </div>
+                  <span className="text-gray-500">vs</span>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-lg font-semibold text-black">{match.away_team}</span>
+                    <img
+                      src={`/clubs/${match.away_team.toLowerCase().replace(/\s/g, '-')}.png`}
+                      alt={`${match.away_team} logo`}
+                      className="w-10 h-10"
+                    />
+                  </div>
                 </div>
-
-                <div className="h-44 m-4">
-                    <div className="w-full h-full bg-white animate-fade-left animate-delay-[400ms] rounded-lg shadow-md flex items-center mb-4">
-                        {/* Left Section */}
-                        <div className="flex flex-col justify-center items-center w-2/5 h-full bg-gray-200 p-4 text-center rounded-l-lg">
-                            <p className="text-3xl font-bold text-blue-900">CHAMPION CUP</p>
-                            <p className="text-lg font-bold mt-2">14 déc. 2024 à 18H30</p>
-                            <p className="text-lg text-black mt-1">Aviva stadium</p>
-                        </div>
-
-                        {/* Right Section */}
-                        <div className="flex items-center w-4/5 p-4 bg-white rounded-lg">
-                            {/* Team 1 */}
-                            <div className="flex-1 flex items-center justify-end pr-4">
-                                <Image
-                                    src="/assets/Leinster.svg" // Replace with your actual image URL
-                                    alt="Leinster Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                                <p className="ml-2 text-lg">Leinster</p>
-                            </div>
-
-                            {/* Score */}
-                            <div className="flex items-center">
-                                <p className="text-2xl font-bold">15</p>
-                                <p className="mx-4 text-lg font-semibold text-gray-700">-</p>
-                                <p className="text-2xl">7</p>
-                            </div>
-
-                            {/* Team 2 */}
-                            <div className="flex-1 flex items-center justify-start pl-4">
-                                <p className="ml-2 text-lg">ASM Clermont Auvergne</p>
-                                <Image
-                                    src="/assets/Logo_ASM.svg" // Replace with your actual image URL
-                                    alt="ASM Clermont Auvergne Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="h-44 m-4">
-                    <div className="w-full h-full bg-white animate-fade-left animate-delay-[800ms] rounded-lg shadow-md flex items-center mb-4">
-                        {/* Left Section */}
-                        <div className="flex flex-col justify-center items-center w-2/5 h-full bg-gray-200 p-4 text-center rounded-l-lg">
-                            <p className="text-3xl font-bold text-blue-900">CHAMPION CUP</p>
-                            <p className="text-lg font-bold mt-2">7 déc. 2024 à 14H00</p>
-                            <p className="text-lg text-black mt-1">Stade Marcel-Michelin</p>
-                        </div>
-
-                        {/* Right Section */}
-                        <div className="flex items-center w-4/5 p-4 bg-white rounded-lg">
-                            {/* Team 1 */}
-                            <div className="flex-1 flex items-center justify-start pl-4">
-
-                                <Image
-                                    src="/assets/Logo_ASM.svg" // Replace with your actual image URL
-                                    alt="ASM Clermont Auvergne Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                                <p className="ml-2 text-lg">ASM Clermont Auvergne</p>
-                            </div>
-                            {/* Score */}
-                            <div className="flex items-center">
-                                <p className="text-2xl font-bold">28</p>
-                                <p className="mx-4 text-lg font-semibold text-gray-700">-</p>
-                                <p className="text-2xl">0</p>
-                            </div>
-
-                            {/* Team 2 */}
-
-                            <div className="flex-1 flex items-center  pr-4">
-                                <p className="ml-2 text-lg">Benetton Rugby</p>
-                                <Image
-                                    src="/assets/Benetton.svg" // Replace with your actual image URL
-                                    alt="Benetton Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="h-44 m-4">
-                    <div className="w-full h-full bg-white animate-fade-left animate-delay-[1200ms] rounded-lg shadow-md flex items-center mb-4">
-                        {/* Left Section */}
-                        <div className="flex flex-col justify-center items-center w-2/5 h-full bg-gray-200 p-4 text-center rounded-l-lg">
-                            <p className="text-3xl font-bold text-blue-900">TOP 14</p>
-                            <p className="text-lg font-bold mt-2">30 nov. 2024 à 16H30</p>
-                            <p className="text-lg text-black mt-1">Stade Marcel-Michelin</p>
-                        </div>
-
-                        {/* Right Section */}
-                        <div className="flex items-center w-4/5 p-4 bg-white rounded-lg">
-                            {/* Team 1 */}
-                            <div className="flex-1 flex items-center justify-end pr-4">
-                                <Image
-                                    src="/assets/Logo_ASM.svg" // Replace with your actual image URL
-                                    alt="ASM Clermont Auvergne Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                                <p className="ml-2 text-lg">ASM Clermont Auvergne</p>
-                            </div>
-
-                            { }
-                            <div className="flex items-center">
-                                <p className="text-2xl font-bold">47</p>
-                                <p className="mx-4 text-lg font-semibold text-gray-700">-</p>
-                                <p className="text-2xl">10</p>
-                            </div>
-
-                            {/* Team 2 */}
-                            <div className="flex-1 flex items-center justify-start pl-4">
-
-                                <Image
-                                    src="/assets/Castres_Olympique.svg" // Replace with your actual image URL
-                                    alt="Castres_Olympique Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                                <p className="ml-2 text-lg">Castres Olympique</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="h-44 m-4">
-                    <div className="w-full h-full bg-white animate-fade-left animate-delay-[1600ms] rounded-lg shadow-md flex items-center mb-4">
-                        {/* Left Section */}
-                        <div className="flex flex-col justify-center items-center w-2/5 h-full bg-gray-200 p-4 text-center rounded-l-lg">
-                            <p className="text-3xl font-bold text-blue-900">TOP 14</p>
-                            <p className="text-lg font-bold mt-2">23 nov. 2024 à 16H30</p>
-                            <p className="text-lg text-black mt-1">Matmut Stadium de Gerland</p>
-                        </div>
-
-                        {/* Right Section */}
-                        <div className="flex items-center w-4/5 p-4 bg-white rounded-lg">
-                            {/* Team 1 */}
-                            <div className="flex-1 flex items-center justify-end pr-4">
-                                <Image
-                                    src="/assets/Lyon.png" // Replace with your actual image URL
-                                    alt="Lyon Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                                <p className="ml-2 text-lg">Lyon</p>
-
-                            </div>
-
-                            { }
-                            <div className="flex items-center">
-                                <p className="text-2xl ">22</p>
-                                <p className="mx-4 text-lg font-semibold text-gray-700">-</p>
-                                <p className="text-2xl font-bold">30</p>
-                            </div>
-
-                            {/* Team 2 */}
-                            <div className="flex-1 flex items-center justify-start pl-4">
-                                <p className="ml-2 text-lg">ASM Clermont Auvergne</p>
-                                <Image
-                                    src="/assets/Logo_ASM.svg" // Replace with your actual image URL
-                                    alt="ASM Clermont Auvergne Logo"
-                                    width={75}
-                                    height={75}
-                                    className="object-contain mx-2"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              ))}
             </div>
-        </div>
-    )
+          </section>
+
+          {/* Bouton pour accéder aux matchs précédents */}
+          <section className="mb-8">
+            <button
+              onClick={() => router.push("/rencontres")}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+            >
+              Matchs précédents
+            </button>
+          </section>
+        </>
+      )}
+    </main>
+  );
 }
