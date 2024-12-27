@@ -1,19 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../supabaseClient";
 import { UUID } from "crypto";
 import { User } from "@supabase/supabase-js"; // Import du type User
 
 type Article = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   authorid: UUID;
   likes: number;
-  comments: UUID;
+  comment_count: number; // Nouveau champ pour le nombre de commentaires
   created_date: string;
   users: {
     username: string;
@@ -22,13 +21,11 @@ type Article = {
 
 export default function BlogPage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null); // Utilisation explicite de User | null
+  const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const [showSearch, setShowSearch] = useState(false);
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const articlesPerPage = 5;
@@ -37,36 +34,32 @@ export default function BlogPage() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-
-      if (user) {
-        // L'utilisateur est connecté
-        setUser(user);
-      } else {
-        // Aucun utilisateur connecté
-        setUser(null);
-      }
+      setUser(user || null);
     };
 
     checkUser();
   }, []);
 
-  // Récupérer les articles
+  // Récupérer les articles avec le nombre de commentaires
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
+      setError(null);
       try {
         const offset = (currentPage - 1) * articlesPerPage;
+
         const { data, error, count } = await supabase
           .from("articles")
-          .select(`
+          .select(
+            `
             id,
             title,
             description,
             authorid,
             likes,
-            comments,
             created_date,
-            users (username)
+            users (username),
+            comments (id)
           `,
             { count: "exact" }
           )
@@ -75,14 +68,21 @@ export default function BlogPage() {
 
         if (error) {
           console.error("Erreur lors de la récupération des articles :", error.message);
-        } else if (data && Array.isArray(data)) {
-          setArticles(data as unknown as Article[]);
-          setTotalPages(Math.ceil((count || 0) / articlesPerPage));
-        } else {
-          console.warn("Les données reçues ne correspondent pas à la structure attendue.");
+          setError("Impossible de charger les articles. Veuillez réessayer plus tard.");
+          return;
         }
+
+        const articlesWithCommentCount = (data || []).map((article) => ({
+          ...article,
+          comment_count: article.comments ? article.comments.length : 0,
+          users: Array.isArray(article.users) ? article.users[0] : article.users || { username: "Unknown" },
+        }));
+
+        setArticles(articlesWithCommentCount as Article[]);
+        setTotalPages(Math.ceil((count ?? 0) / articlesPerPage));
       } catch (error) {
         console.error("Erreur inattendue lors de la récupération des articles :", error);
+        setError("Impossible de charger les articles. Veuillez réessayer plus tard.");
       } finally {
         setLoading(false);
       }
@@ -99,80 +99,65 @@ export default function BlogPage() {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // Gestion de la pagination
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  // Fonction pour rediriger vers la page "Écrire un article"
   const handleWriteArticle = () => {
-    router.push("/blog/new"); // Redirection vers la page client/app/blog/new/page.tsx
+    router.push("/blog/new");
   };
 
   return (
     <main className="max-w-6xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-4xl font-extrabold leading-none tracking-tight text-white">Blog</h1>
-        {/* Bouton "Écrire un article" */}
         <span className="relative">
           {user ? (
-            <div className="flex justify-between">
-              <button 
+            <button
+              onClick={handleWriteArticle}
               className="text-white px-4 hover:animate-rotate-y"
-              onClick={() => setShowSearch(!showSearch)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-11"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-11">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                </svg>
-              </button>
-              <button
-                onClick={handleWriteArticle}
-                onMouseEnter={() => setIsTooltipVisible(true)}
-                onMouseLeave={() => setIsTooltipVisible(false)}
-                className="text-white px-4 hover:animate-rotate-y"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-11">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-              </button>
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </button>
           ) : (
             <p className="text-lg text-white">Login to write an article.</p>
-          )}
-          {isTooltipVisible && (
-            <div
-              role="tooltip"
-              className="absolute z-10 left-1/2 mt-2 px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
-            >
-              Write a new article !
-              <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
-            </div>
           )}
         </span>
       </div>
       <div className="mb-4">
-        {showSearch &&
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by title..."
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        }
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Search by title..."
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
       {loading ? (
         <p className="text-white text-lg">Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
       ) : articles.length === 0 ? (
-        <p>Aucun article disponible pour le moment.</p>
+        <p className="text-white">Aucun article disponible pour le moment.</p>
       ) : (
         <div className="space-y-8">
           {articles
-            .filter((article) => {
-              return searchTerm.toLowerCase() === ''
-                ? true  // Return true instead of article for empty search
-                : article.title.toLowerCase().includes(searchTerm.toLowerCase());
-            })
+            .filter((article) =>
+              searchTerm === "" || article.title.toLowerCase().includes(searchTerm)
+            )
             .map((article) => (
               <div
                 key={article.id}
@@ -180,13 +165,12 @@ export default function BlogPage() {
               >
                 <h2 className="text-2xl font-bold text-gray-800">{article.title}</h2>
                 <p className="text-sm text-gray-500">
-                  Publié le {new Date(article.created_date).toLocaleDateString()} par{" "}
-                  {article.users?.username || "Auteur inconnu"}
+                  Publié le {new Date(article.created_date).toLocaleDateString()} par {article.users?.username || "Auteur inconnu"}
                 </p>
                 <p className="mt-4 text-gray-700">{article.description.slice(0, 150)}...</p>
                 <div className="mt-6 flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
-                    <button className="flex items-center text-red-600">
+                    <span className="flex items-center text-red-600">
                       {article.likes}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -202,9 +186,9 @@ export default function BlogPage() {
                           d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                         />
                       </svg>
-                    </button>
-                    <button className="flex items-center text-gray-600">
-                      {article.comments}
+                    </span>
+                    <span className="flex items-center text-gray-600">
+                      {article.comment_count}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -219,7 +203,7 @@ export default function BlogPage() {
                           d="M20.25 8.511c.884.636 1.5 1.67 1.5 2.864 0 1.87-1.64 3.375-3.75 3.375-.367 0-.72-.053-1.054-.15-.615.59-1.75 1.02-3.196 1.11-.24.014-.48.021-.723.021-.606 0-1.203-.04-1.785-.117-.617-.08-1.2-.212-1.737-.39C5.964 13.641 4.5 12.35 4.5 10.875c0-1.019.538-1.941 1.38-2.511-.045-.26-.078-.524-.097-.79C5.736 5.53 7.117 4.5 8.25 4.5c.676 0 1.296.243 1.768.648.678-.136 1.41-.148 2.122-.037.528.08 1.044.222 1.535.42A3.792 3.792 0 0 1 16.5 3c1.06 0 2.01.516 2.55 1.313.624.903.975 2.093.675 3.273a4.296 4.296 0 0 1 .525.425Z"
                         />
                       </svg>
-                    </button>
+                    </span>
                   </div>
                   <button
                     onClick={() => router.push(`/articles/${article.id}`)}
@@ -239,50 +223,20 @@ export default function BlogPage() {
                 }`}
               disabled={currentPage === 1}
             >
-              <svg
-                className="w-3.5 h-3.5 me-2 rtl:rotate-180"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 10"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 5H1m0 0 4 4M1 5l4-4"
-                />
-              </svg>
               Previous
             </button>
             <span className="text-xl font-bold text-white">
-              Page {currentPage} on {totalPages}
+              Page {currentPage} sur {totalPages}
             </span>
             <button
               onClick={handleNextPage}
-              disabled={currentPage === totalPages}
               className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === totalPages
                   ? "cursor-not-allowed opacity-50"
                   : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
                 }`}
+              disabled={currentPage === totalPages}
             >
               Next
-              <svg
-                className="w-3.5 h-3.5 ms-2 rtl:rotate-180"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 10"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M1 5h12m0 0L9 1m4 4L9 9"
-                />
-              </svg>
             </button>
           </div>
         </div>
