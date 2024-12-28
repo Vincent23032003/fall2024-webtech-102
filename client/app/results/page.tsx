@@ -160,9 +160,9 @@ export default function ResultsPage() {
           <section className="mb-8">
             <button
               onClick={() => router.push("/rencontres")}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+              className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
             >
-              Matchs précédents
+              Previous games
             </button>
           </section>
         </>

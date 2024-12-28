@@ -124,7 +124,7 @@ const ConnexionPage = () => {
 
           <button
             type="submit"
-            className="w-full mb-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+            className="w-full bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Connecting..." : "Sign in"}
@@ -136,7 +136,7 @@ const ConnexionPage = () => {
           <p className="text-gray-700 mb-4">OR</p>
           <button
             onClick={handleGithubLogin}
-            className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+            className="w-full bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
           >
             Sign in with GitHub
           </button>

@@ -194,7 +194,7 @@ export default function HomePage() {
       <div className="grid grid-cols-3 gap-4 rounded-lg min-h-screen">
         {/* Last Match */}
         <div className="flex text-center items-center justify-center">
-          <span data-aos="fade-up" data-aos-duration="1000" className="block max-w-sm p-6 rounded-lg">
+          <span data-aos="fade-up" data-aos-duration="1000" className="block p-6 rounded-lg">
             <h5 className="mb-2 text-4xl font-bold tracking-tight text-white">Last Match</h5>
             {lastMatch ? (
               <>
@@ -216,7 +216,7 @@ export default function HomePage() {
                   <div>
                     <Image
                       src={getTeamLogo(lastMatch.away_team)}
-                      width={120}
+                      width={300}
                       height={90}
                       alt={`${lastMatch.away_team}-logo`}
                     />
@@ -234,40 +234,41 @@ export default function HomePage() {
           <span data-aos="fade-up" data-aos-duration="2000" className="block max-w-sm p-6 rounded-lg">
             <h5 className="mb-2 text-4xl font-bold tracking-tight text-white">Actual ASM Ranking</h5>
             {asmRanking ? (
-              <table className="w-full">
-                <thead>
+              <table className="w-full border-separate border-spacing-y-3">
+                <thead className="text-white text-xl">
                   <tr>
-                    <th className="text-white">Rank</th>
-                    <th className="text-white">Club</th>
-                    <th className="text-white">Victory</th>
-                    <th className="text-white">Points</th>
+                    <th className="py-2">Rank</th>
+                    <th className="py-2">Club</th>
+                    <th className="py-2">Victory</th>
+                    <th className="py-2">Points</th>
                   </tr>
                 </thead>
                 <tbody>
                   {asmRanking.above && (
-                    <tr>
-                      <td>{asmRanking.above.rank}</td>
-                      <td>{asmRanking.above.team_name}</td>
-                      <td>{asmRanking.above.wins}</td>
-                      <td>{asmRanking.above.points}</td>
+                    <tr className="text-white text-lg rounded-lg">
+                      <td className="py-2 px-4 text-center">{asmRanking.above.rank}</td>
+                      <td className="py-2 px-4 text-center">{asmRanking.above.team_name}</td>
+                      <td className="py-2 px-4 text-center">{asmRanking.above.wins}</td>
+                      <td className="py-2 px-4 text-center">{asmRanking.above.points}</td>
                     </tr>
                   )}
-                  <tr className="bg-blue-900 text-white">
-                    <td>{asmRanking.asm.rank}</td>
-                    <td>{asmRanking.asm.team_name}</td>
-                    <td>{asmRanking.asm.wins}</td>
-                    <td>{asmRanking.asm.points}</td>
-                  </tr>
+                    <tr className="bg-blue-900 text-lg text-white rounded-lg hover:text-yellow-400">
+                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.rank}</td>
+                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.team_name}</td>
+                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.wins}</td>
+                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.points}</td>
+                    </tr>
                   {asmRanking.below && (
-                    <tr>
-                      <td>{asmRanking.below.rank}</td>
-                      <td>{asmRanking.below.team_name}</td>
-                      <td>{asmRanking.below.wins}</td>
-                      <td>{asmRanking.below.points}</td>
+                    <tr className="text-white text-lg rounded-lg">
+                      <td className="py-2 px-4 text-center">{asmRanking.below.rank}</td>
+                      <td className="py-2 px-4 text-center">{asmRanking.below.team_name}</td>
+                      <td className="py-2 px-4 text-center">{asmRanking.below.wins}</td>
+                      <td className="py-2 px-4 text-center">{asmRanking.below.points}</td>
                     </tr>
                   )}
                 </tbody>
               </table>
+
             ) : (
               <p className="text-white">Loading...</p>
             )}
@@ -285,7 +286,7 @@ export default function HomePage() {
                   <div>
                     <Image
                       src={getTeamLogo(nextMatch.home_team)}
-                      width={120}
+                      width={300}
                       height={90}
                       alt={`${nextMatch.home_team}-logo`}
                     />

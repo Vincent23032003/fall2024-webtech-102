@@ -26,6 +26,8 @@ export default function BlogPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const articlesPerPage = 5;
@@ -112,39 +114,63 @@ export default function BlogPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-4xl font-extrabold leading-none tracking-tight text-white">Blog</h1>
         <span className="relative">
+
           {user ? (
-            <button
-              onClick={handleWriteArticle}
-              className="text-white px-4 hover:animate-rotate-y"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="size-11"
+            <div className="flex justify-between">
+              <button
+                className="text-white px-4 hover:animate-rotate-y"
+                onClick={() => setShowSearch(!showSearch)}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-            </button>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-11">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+              </button>
+              <button
+                onClick={handleWriteArticle}
+                onMouseEnter={() => setIsTooltipVisible(true)}
+                onMouseLeave={() => setIsTooltipVisible(false)}
+                className="text-white px-4 hover:animate-rotate-y"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-11"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+              </button>
+            </div>
           ) : (
             <p className="text-lg text-white">Login to write an article.</p>
+          )}
+          {isTooltipVisible && (
+            <div
+              role="tooltip"
+              className="absolute z-10 left-1/2 mt-2 px-3 py-2 text-sm font-medium text-yellow-400 bg-blue-900 rounded-lg "
+            >
+              Write a new article !
+              <div className="absolute w-2 h-2 bg-blue-900 transform rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
+            </div>
           )}
         </span>
       </div>
       <div className="mb-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder="Search by title..."
-          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        {showSearch &&
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by title..."
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        }
       </div>
       {loading ? (
         <p className="text-white text-lg">Loading...</p>
@@ -217,9 +243,9 @@ export default function BlogPage() {
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={handlePrevPage}
-              className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === 1
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === 1
+                ? "cursor-not-allowed opacity-50"
+                : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
                 }`}
               disabled={currentPage === 1}
             >
@@ -230,9 +256,9 @@ export default function BlogPage() {
             </span>
             <button
               onClick={handleNextPage}
-              className={`flex items-center justify-center w-fit h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === totalPages
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === totalPages
+                ? "cursor-not-allowed opacity-50"
+                : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
                 }`}
               disabled={currentPage === totalPages}
             >

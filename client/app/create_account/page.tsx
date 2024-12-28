@@ -92,8 +92,7 @@ const CreateAccountPage = () => {
   };
 
   return (
-    <div className='h-screen'>
-
+    <div className='h-full'>
       <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
         <div className='grid grid-cols-3 m-4'>
           <div className='flex justify-center items-center'>
