@@ -381,6 +381,24 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
       >
         Add Comment
       </button>
+      
+      {/* Back to Blog Page Button */}
+      <button
+        onClick={() => router.push("/blog")} // Redirige vers la page blog
+        className="w-3/12 h-1/12 bg-gray-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+      >
+        Back to Blog Page
+      </button>
+
+      {!user && (
+        <button
+          onClick={() => router.push("/connexion")} // Redirige vers la page de connexion
+          className="w-3/12 h-1/12 bg-gray-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+        >
+          Sign In
+        </button>
+      )}
+
       {!user && (
         <button
           onClick={() => router.push("/connexion")} // Redirige vers la page de connexion
