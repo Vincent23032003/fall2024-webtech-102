@@ -425,56 +425,91 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
       </div>
 
 
-      {/* Add Comment Button */}
-    <div className="flex items-center mt-4 space-x-4">
+     {/* Add Comment Button */}
+<div className="flex items-center mt-4 space-x-4">
+  <button
+    onClick={() => user && setShowCommentForm(true)}
+    className={`w-3/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
+      !user || showCommentForm
+        ? "cursor-not-allowed opacity-50"
+        : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+    }`}
+    disabled={!user || showCommentForm} // Désactiver si pas connecté ou formulaire affiché
+  >
+    Add Comment
+  </button>
+
+  {/* Back to Blog Page Button */}
+  <button
+    onClick={() => router.push("/blog")} // Redirige vers la page blog
+    className={`w-3/12 h-1/12 bg-red-800 text-white px-4 py-2 rounded-lg ${
+      showCommentForm
+        ? "cursor-not-allowed opacity-50"
+        : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+    }`}
+    disabled={showCommentForm} // Désactiver si le formulaire est affiché
+  >
+    Back to Blog Page
+  </button>
+
+  {!user && (
+    <button
+      onClick={() => router.push("/connexion")} // Redirige vers la page de connexion
+      className="w-3/12 h-1/12 bg-gray-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+    >
+      Sign In
+    </button>
+  )}
+</div>
+
+{!user && (
+  <p className="text-sm text-gray-500 mt-2">You must be logged in to add a comment.</p>
+)}
+
+{/* Comment Form */}
+{showCommentForm && (
+  <div className="mt-4 space-y-4">
+    <textarea
+      value={newComment}
+      onChange={(e) => setNewComment(e.target.value)}
+      placeholder="Write a comment..."
+      className="w-full border rounded p-2"
+    />
+    {error && <p className="text-red-500">{error}</p>}
+    <div className="flex items-center space-x-4">
+      {/* Save Comment Button */}
       <button
-        onClick={() => user && setShowCommentForm(true)}
-        className={`w-3/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
-          !user ? "cursor-not-allowed opacity-50" : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-        }`}
-        disabled={!user} // Désactiver si pas connecté
+        onClick={handleAddComment}
+        className="w-3/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
       >
-        Add Comment
-      </button>
-      
-      {/* Back to Blog Page Button */}
-      <button
-        onClick={() => router.push("/blog")} // Redirige vers la page blog
-        className="w-3/12 h-1/12 bg-gray-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-      >
-        Back to Blog Page
+        Save Comment
       </button>
 
-      {!user && (
-        <button
-          onClick={() => router.push("/connexion")} // Redirige vers la page de connexion
-          className="w-3/12 h-1/12 bg-gray-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
+      {/* Cancel Comment Button */}
+      <button
+        onClick={() => {
+          setShowCommentForm(false); // Cache le champ de commentaire
+          setNewComment(""); // Réinitialise le champ de commentaire
+        }}
+        className="w-3/12 h-1/12 bg-red-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 flex items-center justify-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-5 h-5 mr-2"
         >
-          Sign In
-        </button>
-      )}
-
-    </div>
-    {!user && (
-      <p className="text-sm text-gray-500 mt-2">You must be logged in to add a comment.</p>
-    )}
-
-
-        {showCommentForm && (
-          <div className="mt-4">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Write a comment..."
-              className="w-full border rounded p-2"
-            />
-            {error && <p className="text-red-500">{error}</p>}
-            <button
-              onClick={handleAddComment}
-              className="w-3/12 h-1/12 mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-            >
-              Save Comment
-            </button>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10.5 19.5L3 12m0 0 7.5-7.5M3 12h18"
+          />
+        </svg>
+        
+      </button>
+      </div>
           </div>
         )}
       </section>
