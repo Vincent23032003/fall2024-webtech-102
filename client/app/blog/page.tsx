@@ -158,7 +158,13 @@ export default function BlogPage() {
               </button>
             </div>
           ) : (
-            <p className="text-lg text-white">Login to write an article.</p>
+            <p
+              className="text-lg text-white cursor-pointer hover:underline"
+              onClick={() => router.push("/connexion")}
+            >
+              Login to write an article.
+            </p>
+
           )}
           {isTooltipVisible && (
             <div
