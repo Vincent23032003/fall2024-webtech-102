@@ -296,6 +296,36 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
     }
   };
   
+  /* suppression de commentaires*/
+
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+  
+      if (userError || !user) {
+        alert("You must be logged in to delete a comment.");
+        return;
+      }
+  
+      const { error } = await supabase
+        .from("comments")
+        .delete()
+        .eq("id", commentId)
+        .eq("authorid", user.id);
+  
+      if (error) {
+        console.error("Error deleting comment:", error.message);
+        alert("Failed to delete the comment.");
+        return;
+      }
+  
+      setComments((prevComments) => prevComments.filter((c) => c.id !== commentId));
+      alert("Comment deleted successfully!");
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
+  };
+  
   
   
 
@@ -352,23 +382,48 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
 
 
 
-          {/* Comments Section */}
+        {/* Comments Section */}
       <h2 className="text-2xl mt-10 font-semibold">Comments</h2>
       <div className="mt-2">
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <div key={comment.id} className="border-b border-gray-500 py-2">
-              <p className="text-black">{comment.content}</p>
-              <p className="text-sm text-gray-700">
-                Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
-                {comment.users?.username || "Unknown Author"}
-              </p>
+            <div key={comment.id} className="border-b border-gray-500 py-2 flex justify-between items-center">
+              <div>
+                <p className="text-black">{comment.content}</p>
+                <p className="text-sm text-gray-700">
+                  Published on {new Date(comment.created_date).toLocaleDateString()} by{" "}
+                  {comment.users?.username || "Unknown Author"}
+                </p>
+              </div>
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                disabled={comment.authorid !== user?.id}
+                className={`text-gray-500 hover:text-red-600 ${
+                  comment.authorid !== user?.id ? "cursor-not-allowed opacity-50" : ""
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 6.75L4.5 6.75M8.625 6.75V5.25C8.625 4.42157 9.29657 3.75 10.125 3.75H13.875C14.7034 3.75 15.375 4.42157 15.375 5.25V6.75M18 6.75V18.75C18 19.5784 17.3284 20.25 16.5 20.25H7.5C6.67157 20.25 6 19.5784 6 18.75V6.75H18Z"
+                  />
+                </svg>
+              </button>
             </div>
           ))
         ) : (
           <p className="text-black">No comments yet.</p>
         )}
       </div>
+
 
       {/* Add Comment Button */}
     <div className="flex items-center mt-4 space-x-4">
