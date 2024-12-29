@@ -114,15 +114,25 @@ export default function BlogPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-4xl font-extrabold leading-none tracking-tight text-white">Blog</h1>
         <span className="relative">
-
           {user ? (
             <div className="flex justify-between">
               <button
                 className="text-white px-4 hover:animate-rotate-y"
                 onClick={() => setShowSearch(!showSearch)}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-11">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-11"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
                 </svg>
               </button>
               <button
@@ -162,7 +172,7 @@ export default function BlogPage() {
         </span>
       </div>
       <div className="mb-4">
-        {showSearch &&
+        {showSearch && (
           <input
             type="text"
             value={searchTerm}
@@ -170,7 +180,7 @@ export default function BlogPage() {
             placeholder="Search by title..."
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        }
+        )}
       </div>
       {loading ? (
         <p className="text-white text-lg">Loading...</p>
@@ -181,8 +191,9 @@ export default function BlogPage() {
       ) : (
         <div className="space-y-8">
           {articles
-            .filter((article) =>
-              searchTerm === "" || article.title.toLowerCase().includes(searchTerm)
+            .filter(
+              (article) =>
+                searchTerm === "" || article.title.toLowerCase().includes(searchTerm)
             )
             .map((article) => (
               <div
@@ -191,9 +202,13 @@ export default function BlogPage() {
               >
                 <h2 className="text-2xl font-bold text-gray-800">{article.title}</h2>
                 <p className="text-sm text-gray-500">
-                  Publié le {new Date(article.created_date).toLocaleDateString()} par {article.users?.username || "Auteur inconnu"}
+                  Publié le{" "}
+                  {new Date(article.created_date).toLocaleDateString()} par{" "}
+                  {article.users?.username || "Auteur inconnu"}
                 </p>
-                <p className="mt-4 text-gray-700">{article.description.slice(0, 150)}...</p>
+                <p className="mt-4 text-gray-700">
+                  {article.description.slice(0, 150)}...
+                </p>
                 <div className="mt-6 flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <span className="flex items-center text-red-600">
@@ -237,16 +252,49 @@ export default function BlogPage() {
                   >
                     Lire l'article
                   </button>
+                  {user?.id === article.authorid && (
+                    <>
+                      <button
+                        onClick={() => router.push(`/blog/edit/${article.id}`)}
+                        className="w-2/12 h-1/12 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                      >
+                        Modifier
+                      </button>
+                      <button
+                        onClick={async () => {
+                          const confirmDelete = confirm(
+                            "Voulez-vous vraiment supprimer cet article ?"
+                          );
+                          if (confirmDelete) {
+                            const { error } = await supabase
+                              .from("articles")
+                              .delete()
+                              .eq("id", article.id);
+  
+                            if (!error) {
+                              setArticles((prev) =>
+                                prev.filter((a) => a.id !== article.id)
+                              );
+                            }
+                          }
+                        }}
+                        className="w-2/12 h-1/12 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                      >
+                        Supprimer
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={handlePrevPage}
-              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === 1
-                ? "cursor-not-allowed opacity-50"
-                : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-                }`}
+              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
+                currentPage === 1
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+              }`}
               disabled={currentPage === 1}
             >
               Previous
@@ -256,10 +304,11 @@ export default function BlogPage() {
             </span>
             <button
               onClick={handleNextPage}
-              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === totalPages
-                ? "cursor-not-allowed opacity-50"
-                : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-                }`}
+              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
+                currentPage === totalPages
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
+              }`}
               disabled={currentPage === totalPages}
             >
               Next
@@ -269,4 +318,4 @@ export default function BlogPage() {
       )}
     </main>
   );
-}
+}  
