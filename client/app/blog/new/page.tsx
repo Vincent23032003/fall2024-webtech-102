@@ -41,17 +41,23 @@ export default function NewArticlePage() {
       setError("Veuillez remplir tous les champs.");
       return;
     }
-
+  
+    // Vérification de la longueur du titre
+    if (title.length > 255) {
+      setError("Le titre ne doit pas dépasser 255 caractères.");
+      return;
+    }
+  
     setError(null);
     setLoading(true);
-
+  
     try {
       if (!user) {
         throw new Error("Utilisateur non connecté.");
       }
-
+  
       const createdDate = new Date().toISOString(); // Générer la date actuelle au format ISO
-
+  
       const { data, error } = await supabase
         .from("articles")
         .insert({
@@ -63,17 +69,23 @@ export default function NewArticlePage() {
           comments: [], // Initialiser les commentaires comme un tableau vide
         })
         .select();
-
+  
       if (error) {
+        // Vérification de messages d'erreur spécifiques retournés par Supabase
+        if (error.details && error.details.includes("value too long for type")) {
+          setError("Le titre est trop long. Veuillez limiter à 255 caractères.");
+          return;
+        }
         throw error;
       }
-
+  
       if (data) {
         // Rediriger l'utilisateur vers la page du blog après la création
         router.push("/blog");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
+        // Afficher le message d'erreur spécifique si disponible
         setError(err.message || "Erreur lors de la création de l'article.");
       } else {
         setError("Une erreur inattendue s'est produite.");
@@ -82,14 +94,8 @@ export default function NewArticlePage() {
       setLoading(false);
     }
   };
-
-  if (!user) {
-    return (
-      <p className="text-center text-gray-500 mt-12">
-        Vous devez être connecté pour écrire un article.
-      </p>
-    );
-  }
+  
+  
 
   return (
     <main className="max-w-4xl mx-auto h-screen">
