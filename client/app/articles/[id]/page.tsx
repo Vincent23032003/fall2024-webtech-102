@@ -399,14 +399,6 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
         </button>
       )}
 
-      {!user && (
-        <button
-          onClick={() => router.push("/connexion")} // Redirige vers la page de connexion
-          className="w-3/12 h-1/12 bg-gray-800 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-        >
-          Sign In
-        </button>
-      )}
     </div>
     {!user && (
       <p className="text-sm text-gray-500 mt-2">You must be logged in to add a comment.</p>
