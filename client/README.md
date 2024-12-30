@@ -2,108 +2,178 @@
 
 ## Introduction
 
-Bienvenue sur le projet frontend du site dédié aux fans de l'ASM Clermont Auvergne. Ce projet rassemble toutes les pages web qui composent le site et est mis à jour régulièrement. L'objectif est d'offrir une plateforme intuitive, dynamique et interactive pour mettre en avant les actualités, l'histoire, les joueurs, et les trophées du club.
+Welcome to the frontend project of the website dedicated to ASM Clermont Auvergne fans. This project gathers all the web pages that compose the site and is regularly updated. The goal is to provide an intuitive, dynamic, and interactive platform to highlight the club's news, history, players, and trophies.
 
 ---
 
 ## Features 🏉
 
-### **1. Pages et fonctionnalités principales**
+### **1. Main Pages and Features**
 
 #### **1.1 Home Page**
-La page d'accueil offre un aperçu dynamique des informations principales du club :
-- Dernier match joué, classement actuel, et prochain match à venir (données récupérées via Supabase).
-- Identification des utilisateurs connectés et gestion automatique de leurs informations.
-- Accès rapide aux articles, légendes, et joueurs via des boutons interactifs.
+The homepage provides a dynamic overview of the club's key information:
+- Last match played, current standings, and upcoming match (data fetched from Supabase).
+- Identification and automatic management of connected users' information.
+- Quick access to articles, legends, and players through interactive buttons.
 
 #### **1.2 Layout**
-Structure globale de l'application :
-- Barre de navigation et pied de page.
-- Design harmonieux avec arrière-plan dégradé et styles globaux.
+Global structure of the application:
+- Navigation bar and footer.
+- Harmonious design with gradient background and global styles.
 
 #### **1.3 Articles ([id])**
-Détails d'un article :
-- Titre, description, auteur, date de publication, et likes.
-- Fonctionnalités interactives : ajouter, modifier ou supprimer des commentaires ; liker ou retirer un like.
+Displays article details:
+- Title, description, author, publication date, and likes.
+- Interactive features: add, edit, or delete comments; like or unlike an article.
 
 #### **1.4 Auth Callback**
-Gère la redirection après authentification :
-- Redirige vers `/settings` en cas de succès.
-- Redirige vers `/connexion` en cas d'échec.
+Manages redirection after authentication:
+- Redirects to `/settings` on success.
+- Redirects to `/connexion` on failure.
 
 #### **1.5 Blog**
-Liste paginée d'articles :
-- Recherche par titre et navigation entre les pages.
-- Création, modification, et suppression d'articles (utilisateurs connectés).
+Paginated list of articles:
+- Search by title and navigation between pages.
+- Create, edit, and delete articles (for logged-in users).
 
 #### **1.6 Blog - New**
-Création d'un nouvel article :
-- Éditeur WYSIWYG pour saisir titre et description.
-- Validation des données et redirection après succès.
+Create a new article:
+- WYSIWYG editor for entering title and description.
+- Data validation and redirection after success.
 
 #### **1.7 Blog - Edit**
-Modification d'un article existant :
-- Préremplit les champs avec les données actuelles.
-- Valide et enregistre les modifications.
+Edit an existing article:
+- Pre-fills fields with current data.
+- Validates and saves changes.
 
 #### **1.8 Club**
-Présente l'histoire du club :
-- Chronologie des événements marquants organisée par périodes.
-- Animations fluides et responsive.
+Showcases the club's history:
+- Timeline of key events organized by periods.
+- Smooth and responsive animations.
 
 #### **1.9 Connexion**
-Connexion via deux méthodes :
-- Email/mot de passe avec redirection vers `/settings` après succès.
-- Authentification OAuth via GitHub.
+Login via two methods:
+- Email/password with redirection to `/settings` upon success.
+- OAuth authentication via GitHub.
 
 #### **1.10 Create Account**
-Création de compte :
-- Validation des champs et hashage sécurisé du mot de passe.
-- Redirection vers `/connexion` après succès.
+Account creation:
+- Field validation and secure password hashing.
+- Redirection to `/connexion` upon success.
 
 #### **1.11 Legends**
-Met en avant les légendes modernes du club :
-- Présentation interactive des joueurs avec informations détaillées.
+Highlights the club's modern legends:
+- Interactive display of players with detailed information.
 
 #### **1.12 Previous Matches**
-Liste des matchs précédents, regroupés par semaines :
-- Détails des scores, noms des équipes, et logos.
+List of past matches, grouped by weeks:
+- Match scores, team names, and logos.
 
 #### **1.13 Results**
-Classement actuel et prochaines rencontres :
-- Classement complet des équipes avec statistiques.
-- Liste des matchs à venir.
+Current standings and upcoming matches:
+- Full standings of teams with statistics.
+- List of matches for the current week.
 
 #### **1.14 Settings**
-Personnalisation du profil utilisateur :
-- Modification des informations personnelles et choix d’un avatar.
-- Déconnexion sécurisée.
+User profile customization:
+- Edit personal information and choose an avatar.
+- Secure logout.
 
 #### **1.15 Support**
-Facilite le contact avec les membres du projet :
-- Coordonnées des membres avec liens pour les contacter par email.
+Facilitates contact with project members:
+- Team members' contact information with links to email them.
 
 #### **1.16 Team**
-Met en avant l'équipe actuelle :
-- Informations détaillées sur chaque joueur.
+Showcases the current team:
+- Detailed information on each player.
 
 #### **1.17 Trophies**
-Mise en lumière des trophées remportés :
-- Présentation animée des victoires et finales jouées.
+Highlights the trophies won:
+- Animated display of victories and finals played.
 
 ---
 
-## Technologies utilisées 👨🏻‍💻
+## 2.1 AppFooter
+The `AppFooter` component creates a modern footer with the club logo, links to social media (Instagram, Twitter, Facebook), and the official website. It also displays the copyright for the Web Technologies 2024 project. Styled with Tailwind CSS, it offers a responsive and elegant design to complete the application.
 
-- **Framework Frontend :** [Next.js](https://nextjs.org/)
-- **Langage :** TypeScript (TSX)
-- **Styles :** Tailwind CSS
-- **Base de données et authentification :** [Supabase](https://supabase.com/)
+## 2.2 AppNavbar
+The `Navbar` component creates a functional and interactive navigation bar for the application. Key features include:
+
+- **Main Navigation:**
+  - Links to key site sections: Home, Club, Team Roster, Results, Blog, and Support.
+  - A dropdown menu to explore the club's history, legends, and trophies.
+
+- **User Management:**
+  - Displays an avatar and custom options for logged-in users.
+  - Provides buttons to access settings or login.
+
+- **Modern Design and Animations:**
+  - Uses Tailwind CSS for a clean and responsive style.
+  - Integrates smooth animations, such as link hover transitions.
+
+- **Dynamic Data:**
+  - Retrieves and displays logged-in user details via Supabase.
+
+## 2.3 ThemeSelector
+The `ThemeSelector` component allows users to toggle between light and dark modes. Key features include:
+
+- **Toggle Themes:**
+  - Two buttons allow switching between light and dark modes.
+
+- **Theme Persistence:**
+  - The selected theme is saved in `localStorage` to persist across sessions.
+
+- **Dynamic Application:**
+  - Updates the `dark` class on the HTML element to apply the corresponding styles.
+
+- **Adaptive Design:**
+  - Buttons adapt their styles based on the active theme.
+
+## 2.4 WysiwygEditor
+The `WysiwygEditor` component provides a rich text editor for creating and formatting articles. Key features include:
+
+- **Rich Text Editing:**
+  - Powered by TipTap, the editor includes extensions like bold, italic, underline, highlight, and options for subscript and superscript.
+
+- **Article Creation:**
+  - Allows logged-in users to draft and publish articles with a title and detailed content.
+  - Articles are saved to Supabase with metadata such as author and creation date.
+
+- **Validation and Error Management:**
+  - Ensures required fields are filled before publication.
+  - Displays clear error messages if constraints are not met.
+
+- **Dynamic Customization:**
+  - Users can directly format text through interactive toolbar buttons.
 
 ---
 
-## Utilisation ❓
+## Technologies Used 👨🏻‍💻
 
-### **1. Cloner le projet**
+- **Frontend Framework:** [Next.js](https://nextjs.org/)
+- **Language:** TypeScript (TSX)
+- **Styles:** Tailwind CSS
+- **Database and Authentication:** [Supabase](https://supabase.com/)
+
+---
+
+## How to Use ❓
+
+### **1. Clone the Project**
 ```bash
 git clone https://github.com/Vincent23032003/fall2024-webtech-102.git
+```
+
+### **2. Install Dependencies**
+```bash
+npm install
+
+```
+
+### **3. Run the Application in Client part**
+```bash
+npm run dev
+```
+
+### **4. Open the Project in a Browser**
+http://localhost:3000
