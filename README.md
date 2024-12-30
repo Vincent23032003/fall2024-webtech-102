@@ -17,10 +17,34 @@ This project is a digital publishing application designed as part of the WebTech
 
 ## Repository Structure
 
-```bash
+```plaintext
 /
-├── api/                   # Backend logic (if applicable)
-│   └── (à détailler si utilisé)
+├── api/                   # Backend logic built with Node.js and Prisma
+│   ├── prisma/            # Prisma ORM configuration and migrations
+│   │   ├── migrations/    # Database migration files
+│   │   │   ├── 20241123122538/
+│   │   │   │   └── migration.sql
+│   │   │   ├── 20241123143734/
+│   │   │   │   └── migration.sql
+│   │   ├── schema.prisma  # Prisma schema file defining the database structure
+│   │   └── migration_lock.toml # Migration lock file
+│   │
+│   ├── src/               # Source files for backend logic
+│   │   ├── middlewares/   # Middleware logic for route handling
+│   │   │   └── roleMiddleware.js
+│   │   ├── models/        # Database model definitions and ORM initialization
+│   │   │   └── prismaClient.js
+│   │   ├── routes/        # Route handlers for the API
+│   │   │   ├── auth/      # Authentication-related endpoints
+│   │   │   │   └── register.js
+│   │   │   ├── users/     # User-related endpoints
+│   │   │   │   └── index.js
+│   │   │   └── index.js   # Main API routes entry point
+│   │   └── app.js         # Main application entry point
+│   │
+│   ├── test.rest          # REST client file for testing API endpoints
+│   ├── .gitignore         # Git ignore file for the API
+│   └── README.md          # Detailed documentation for the backend
 │
 ├── client/                # Frontend built with Next.js
 │   ├── app/               # Pages and routing
@@ -61,8 +85,6 @@ This project is a digital publishing application designed as part of the WebTech
 ├── README.md              # General project overview
 ├── package.json           # Node.js dependencies
 └── ...                    # Other root-level files
-```
-
 
 ## Contributors
 
