@@ -92,11 +92,12 @@ Highlights the trophies won:
 - Animated display of victories and finals played.
 
 ---
+## **2. Components**
 
-## 2.1 AppFooter
+#### **2.1 AppFooter**
 The `AppFooter` component creates a modern footer with the club logo, links to social media (Instagram, Twitter, Facebook), and the official website. It also displays the copyright for the Web Technologies 2024 project. Styled with Tailwind CSS, it offers a responsive and elegant design to complete the application.
 
-## 2.2 AppNavbar
+#### **2.2 AppNavbar**
 The `Navbar` component creates a functional and interactive navigation bar for the application. Key features include:
 
 - **Main Navigation:**
@@ -114,7 +115,7 @@ The `Navbar` component creates a functional and interactive navigation bar for t
 - **Dynamic Data:**
   - Retrieves and displays logged-in user details via Supabase.
 
-## 2.3 ThemeSelector
+#### **2.3 ThemeSelector**
 The `ThemeSelector` component allows users to toggle between light and dark modes. Key features include:
 
 - **Toggle Themes:**
@@ -129,7 +130,7 @@ The `ThemeSelector` component allows users to toggle between light and dark mode
 - **Adaptive Design:**
   - Buttons adapt their styles based on the active theme.
 
-## 2.4 WysiwygEditor
+#### **2.4 WysiwygEditor**
 The `WysiwygEditor` component provides a rich text editor for creating and formatting articles. Key features include:
 
 - **Rich Text Editing:**
