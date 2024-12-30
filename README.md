@@ -85,6 +85,7 @@ This project is a digital publishing application designed as part of the WebTech
 ├── README.md              # General project overview
 ├── package.json           # Node.js dependencies
 └── ...                    # Other root-level files
+```
 
 ## Contributors
 
