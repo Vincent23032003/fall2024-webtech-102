@@ -44,7 +44,7 @@ http://localhost:3000
 ## Deployment
 
 - **Frontend**: Hosted on [Vercel](https://vercel.com/)
-- **Backend/Storage**: Powered by [Supabase](https://supabase.com/)
+- **Backend/Storage**: Powered by [Supabase](https://supabase.com/dashboard/project/lrqklzeejctsxkzxozoo)
 
 
 
