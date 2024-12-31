@@ -43,7 +43,7 @@ http://localhost:3000
 
 ## Deployment
 
-- **Frontend**: Hosted on [Vercel](https://vercel.com/)
+- **Frontend**: Hosted on [Vercel](https://fall2024-webtech-102-tn72.vercel.app/)
 - **Backend/Storage**: Powered by [Supabase](https://supabase.com/dashboard/project/lrqklzeejctsxkzxozoo)
 
 
@@ -77,92 +77,87 @@ http://localhost:3000
 ### Mandatory Tasks
 
 #### Naming Convention
-- **Grade:** X/2
+- **Grade:** 2/2
 - **Comments:** Followed consistent and meaningful naming conventions for files, variables, and components.
-- **Task Feedback:** The task was straightforward and easy to follow.
 
 #### Project Structure
-- **Grade:** X/2
+- **Grade:** 2/2
 - **Comments:** Organized the project with a clear folder structure separating components, pages, and styles.
-- **Task Feedback:** Logical structure helped maintain clarity.
 
 #### Git Usage
-- **Grade:** X/2
+- **Grade:** 2/2
 - **Comments:** Used meaningful commit messages and followed a logical commit history.
-- **Task Feedback:** Git usage felt natural and effective.
+- **Task Feedback:** It was a quit difficult at the beginning but It has been ok after.
 
 #### Code Quality
-- **Grade:** X/4
+- **Grade:** 3.5/4
 - **Comments:** Ensured code readability with proper indentation, comments, and consistent formatting.
-- **Task Feedback:** Writing clean code significantly improved maintainability.
 
 #### Design, UX, and Content
-- **Grade:** X/4
+- **Grade:** 4/4
 - **Comments:** Leveraged Tailwind CSS for a responsive and visually appealing design. Focused on accessibility and user experience.
-- **Task Feedback:** Enjoyed implementing creative design elements.
 
 #### Home Page
-- **Grade:** X/2
+- **Grade:** 2/2
 - **Comments:** Implemented a dynamic homepage showcasing the latest match, standings, and upcoming matches using Supabase.
-- **Task Feedback:** A rewarding task as it sets the tone for the platform.
+- **Task Feedback:** This is exactly what we expected.
 
 #### Navigation
-- **Grade:** X/2
+- **Grade:** 2/2
 - **Comments:** Designed a responsive navigation bar with dropdown menus for seamless exploration.
-- **Task Feedback:** Straightforward and enjoyable to implement.
 
 #### Login and Profile Page
-- **Grade:** X/4
+- **Grade:** 4/4
 - **Comments:** Integrated authentication via Supabase and provided a profile customization option for users.
 - **Task Feedback:** A challenging but rewarding task to implement securely.
 
 #### Post Creation and Display
-- **Grade:** X/6
+- **Grade:** 5/6
 - **Comments:** Users can create and view detailed posts. Implemented pagination and WYSIWYG editor for content creation.
 - **Task Feedback:** Enjoyed integrating dynamic post features.
 
 #### Comment Creation and Display
-- **Grade:** X/4
+- **Grade:** 4/4
 - **Comments:** Added functionality to comment on posts with proper validation.
 - **Task Feedback:** Easy to implement and adds significant interactivity.
 
 #### Post Modification and Removal
-- **Grade:** X/4
+- **Grade:** 4/4
 - **Comments:** Enabled authenticated users to edit or delete their posts.
 - **Task Feedback:** Improved understanding of secure data handling.
 
 #### Search
-- **Grade:** X/6
+- **Grade:** 6/6
 - **Comments:** Implemented server-side search using Supabase's Full Text Search.
 - **Task Feedback:** A complex but enriching experience.
 
 #### Use an External API
-- **Grade:** X/2
+- **Grade:** 0/2
 - **Comments:** Used the Unsplash API to display random images in articles.
 - **Task Feedback:** Simple and effective integration.
 
 #### Resource Access Control
-- **Grade:** X/6
+- **Grade:** 5/6
 - **Comments:** Implemented Supabase's Row Level Security to ensure secure data access.
 - **Task Feedback:** A critical feature that ensures data privacy.
 
 #### Account Settings
-- **Grade:** X/4
+- **Grade:** 4/4
 - **Comments:** Provided options to update user information and select an avatar.
 - **Task Feedback:** Fun to implement and customize.
 
 #### WYSIWYG Integration
-- **Grade:** X/2
+- **Grade:** 1/2
 - **Comments:** Added a TipTap-based rich text editor for creating articles.
 - **Task Feedback:** Straightforward integration.
 
 #### Gravatar Integration
-- **Grade:** X/2
+- **Grade:** 2/2
 - **Comments:** Integrated Gravatar for user avatars with fallback options.
 - **Task Feedback:** Simple yet impactful feature.
 
 #### Light/Dark Mode
-- **Grade:** X/2
+- **Grade:** 0/2
 - **Comments:** Added a theme selector to toggle between light and dark modes.
 - **Task Feedback:** Easy to implement and enhances user experience.
 
