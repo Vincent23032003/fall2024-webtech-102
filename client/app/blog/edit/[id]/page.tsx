@@ -5,15 +5,14 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../../../supabaseClient";
 
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = React.use(params); // Unwrap the promise
-  const articleId = resolvedParams.id; // Correct usage
+  const resolvedParams = React.use(params);
+  const articleId = resolvedParams.id;
   const [article, setArticle] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  // Fetch the article to edit
   useEffect(() => {
     const fetchArticle = async () => {
       const { data, error } = await supabase

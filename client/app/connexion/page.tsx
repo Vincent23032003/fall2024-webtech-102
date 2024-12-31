@@ -9,13 +9,11 @@ import { supabase } from "../../utils/supabaseClient";
 const ConnexionPage = () => {
   const router = useRouter();
 
-  // États pour la connexion classique (email/password)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Connexion avec email/mot de passe
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -24,7 +22,7 @@ const ConnexionPage = () => {
       setError(null);
 
       if (!email.includes("@")) {
-        setError("Email invalide.");
+        setError("Courriel invalide.");
         return;
       }
 
@@ -34,20 +32,19 @@ const ConnexionPage = () => {
       });
 
       if (error) {
-        setError("Email ou mot de passe incorrect.");
+        setError("Incorrect email address or password.");
         return;
       }
 
-      // Redirection après connexion réussie
+
       router.push("/settings");
     } catch (err: any) {
-      setError("Une erreur est survenue.");
+      setError("An error has occurred.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Connexion avec GitHub
   const handleGithubLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -56,17 +53,17 @@ const ConnexionPage = () => {
           redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL || `${window.location.origin}/auth/callback`,
         },
       });
-  
+
       if (error) {
         console.error("GitHub login error:", error.message);
-        setError("Erreur lors de la connexion avec GitHub.");
+        setError("Error connecting to GitHub.");
       }
     } catch (err) {
       console.error("Unexpected error:", err);
-      setError("Une erreur est survenue avec GitHub.");
+      setError("An error has occurred with GitHub.");
     }
   };
-  
+
 
   return (
     <div className="h-screen">

@@ -21,10 +21,10 @@ export default function AuthCallback() {
 
         if (session) {
           console.log('User session:', session)
-          router.push('/settings') // Redirect after successful login
+          router.push('/settings')
         } else {
           console.warn('No session found')
-          router.push('/connexion') // Redirect if no session is found
+          router.push('/connexion')
         }
       } catch (err) {
         console.error('Unexpected error:', err)

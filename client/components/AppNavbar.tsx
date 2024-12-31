@@ -24,7 +24,7 @@ export default function Navbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [isTooltipVisible1, setIsTooltipVisible1] = useState(false);
-  const [user, setUser] = useState<any>(null); // Stocker l'utilisateur dans l'état
+  const [user, setUser] = useState<any>(null);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [selectedAvatar, setSelectedAvatar] = useState(gravatarList[0]);
 
@@ -41,15 +41,15 @@ export default function Navbar() {
     const getUser = async () => {
       try {
 
-        // Récupère l'utilisateur connecté
+
         const { data: authData, error: authError } = await supabase.auth.getUser();
 
         if (authError || !authData?.user) {
-          console.warn("Aucun utilisateur connecté ou session manquante.");
+          console.warn("No user logged in or session missing.");
           setUser(null);
         } else {
-          setUser(authData.user); // Stocke l'utilisateur dans l'état
-          // Récupérer les détails de l'utilisateur depuis la table 'users'
+          setUser(authData.user);
+
           const { data, error } = await supabase
             .from("users")
             .select("*")
@@ -57,14 +57,14 @@ export default function Navbar() {
             .single();
 
           if (error) {
-            console.error("Erreur lors de la récupération des détails de l'utilisateur:", error.message);
+            console.error("Error retrieving user details:", error.message);
           } else {
-            setUserDetails(data); // Stocke les détails supplémentaires dans l'état
+            setUserDetails(data);
             setSelectedAvatar(data.avatarUrl);
           }
         }
       } catch (error) {
-        console.error("Une erreur est survenue lors de la récupération de l'utilisateur", error);
+        console.error("An error has occurred while retrieving the user", error);
         setUser(null);
       }
     };

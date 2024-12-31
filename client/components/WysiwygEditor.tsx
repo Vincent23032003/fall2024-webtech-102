@@ -25,7 +25,6 @@ const WysiwygEditor: React.FC = () => {
 
     const handleInput = () => {
         if (editorRef2.current) {
-            // Récupère le contenu HTML du div
             setDescription(editorRef2.current.textContent || "");
         }
     };
@@ -34,7 +33,7 @@ const WysiwygEditor: React.FC = () => {
         const checkUser = async () => {
             const { data: { user }, error } = await supabase.auth.getUser();
             if (error) {
-                console.error("Erreur lors de la récupération de l'utilisateur :", error.message);
+                console.error("User recovery error :", error.message);
                 setUser(null);
             } else {
                 setUser(user);
@@ -55,10 +54,10 @@ const WysiwygEditor: React.FC = () => {
 
         try {
             if (!user) {
-                throw new Error("Utilisateur non connecté.");
+                throw new Error("User not logged in.");
             }
 
-            const createdDate = new Date().toISOString(); // Générer la date actuelle au format ISO
+            const createdDate = new Date().toISOString();
 
             const { data, error } = await supabase
                 .from("articles")
@@ -67,8 +66,8 @@ const WysiwygEditor: React.FC = () => {
                     description,
                     authorid: user.id,
                     created_date: createdDate,
-                    likes: 0, // Initialiser les likes à 0
-                    comments: [], // Initialiser les commentaires comme un tableau vide
+                    likes: 0,
+                    comments: [],
                 })
                 .select();
 
@@ -77,14 +76,14 @@ const WysiwygEditor: React.FC = () => {
             }
 
             if (data) {
-                // Rediriger l'utilisateur vers la page du blog après la création
+
                 router.push("/blog");
             }
         } catch (err: unknown) {
             if (err instanceof Error) {
-                setError(err.message || "Erreur lors de la création de l'article.");
+                setError(err.message || "Error when creating the article.");
             } else {
-                setError("Une erreur inattendue s'est produite.");
+                setError("An unexpected error has occurred.");
             }
         } finally {
             setLoading(false);
@@ -94,7 +93,7 @@ const WysiwygEditor: React.FC = () => {
     useEffect(() => {
         if (!document.getElementById('wysiwyg-text-example')) return;
 
-        // Extend FontSize TextStyle
+
         const FontSizeTextStyle = TextStyle.extend({
             addAttributes() {
                 return {
@@ -112,7 +111,7 @@ const WysiwygEditor: React.FC = () => {
             },
         });
 
-        // Custom Bold Extension
+
         const CustomBold = Bold.extend({
             renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
                 return ['span', { ...HTMLAttributes, style: 'font-weight: bold;' }, 0];
@@ -120,11 +119,11 @@ const WysiwygEditor: React.FC = () => {
             excludes: '',
         });
 
-        // Initialize TipTap Editor
+
         const editor = new Editor({
             element: document.querySelector('#wysiwyg-text-example') as HTMLElement,
             extensions: [
-                StarterKit, // Includes essential marks and nodes
+                StarterKit,
                 CustomBold,
                 Highlight,
                 Underline,
@@ -135,7 +134,7 @@ const WysiwygEditor: React.FC = () => {
                 Color,
                 FontFamily,
             ],
-            content: '', // Set initial content as empty for user input
+            content: '',
             editorProps: {
                 attributes: {
                     class: 'format lg:format-lg dark:format-invert focus:outline-none format-blue max-w-none',
@@ -145,7 +144,7 @@ const WysiwygEditor: React.FC = () => {
 
         editorRef.current = editor;
 
-        // Event Listeners
+
         const setupButtonListeners = () => {
             document
                 .getElementById('toggleBoldButton')

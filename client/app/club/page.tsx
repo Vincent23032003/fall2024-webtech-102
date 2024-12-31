@@ -10,7 +10,7 @@ export default function Page() {
 
   useEffect(() => {
     AOS.init({
-      duration: 800, // Animation duration (in ms)
+      duration: 800,
     });
   }, []);
 
@@ -39,7 +39,7 @@ export default function Page() {
             <div className="absolute w-3 h-3 bg-white rounded-full mt-1.5 -start-1.5 border border-white dark:border-white dark:bg-white"></div>
             <h3 className="mb-1 text-lg font-bold leading-none text-white dark:text-white"> 2004 - 2013</h3>
             <p className="mb-4 text-base font-normal text-white dark:text-white">René Fontes took over as chairman in 2004. After a disastrous start to the season, the club made a spectacular recovery under Olivier Saisset to qualify for the European Cup. That same year, ASM became ASM Clermont Auvergne. The 2005-06 season was a gloomy one, during which the club lost its last ticket for the European Cup. The arrival of Vern Cotter in 2006-07 ushered in a new era for the club. His tenure was crowned by 4 consecutive French championship finals from 2007 onwards, including the club's first Brennus Shield in 2010, 1 European challenge and a European Cup final. The Yellow and Blue came close to their first major European title when they lost to RC Toulonnais in Dublin. His game became a benchmark...
-            2011 will be marked by centenary celebrations, in particular the match against Aironi on 18 November 2011, which will bring together ex-Montferranders and players from the match. </p>
+              2011 will be marked by centenary celebrations, in particular the match against Aironi on 18 November 2011, which will bring together ex-Montferranders and players from the match. </p>
           </li>
           <li className="mb-10 ms-4">
             <div className="absolute w-3 h-3 bg-white rounded-full mt-1.5 -start-1.5 border border-white dark:border-white dark:bg-white"></div>

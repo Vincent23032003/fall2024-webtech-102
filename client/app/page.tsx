@@ -192,7 +192,6 @@ export default function HomePage() {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-4 rounded-lg min-h-screen">
-        {/* Last Match */}
         <div className="flex text-center items-center justify-center">
           <span data-aos="fade-up" data-aos-duration="1000" className="block p-6 rounded-lg">
             <h5 className="mb-2 text-4xl font-bold tracking-tight text-white">Last Match</h5>
@@ -224,7 +223,7 @@ export default function HomePage() {
                 </span>
                 <a href="/results"
                   className="w-1/2 h-1/12 inline-flex items-center justify-center px-5 py-3 mx-4 text-base font-medium rounded-lg text-center text-white hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                See results
+                  See results
                 </a>
               </>
             ) : (
@@ -233,7 +232,7 @@ export default function HomePage() {
           </span>
         </div>
 
-        {/* Actual ASM Ranking */}
+
         <div className="flex items-center justify-center text-center">
           <span data-aos="fade-up" data-aos-duration="2000" className="block max-w-sm p-6 rounded-lg">
             <h5 className="mb-2 text-4xl font-bold tracking-tight text-white">Actual ASM Ranking</h5>
@@ -256,12 +255,12 @@ export default function HomePage() {
                       <td className="py-2 px-4 text-center">{asmRanking.above.points}</td>
                     </tr>
                   )}
-                    <tr className="bg-blue-900 text-lg text-white rounded-lg hover:text-yellow-400">
-                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.rank}</td>
-                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.team_name}</td>
-                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.wins}</td>
-                      <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.points}</td>
-                    </tr>
+                  <tr className="bg-blue-900 text-lg text-white rounded-lg hover:text-yellow-400">
+                    <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.rank}</td>
+                    <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.team_name}</td>
+                    <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.wins}</td>
+                    <td className="py-2 px-4 text-center font-bold">{asmRanking.asm.points}</td>
+                  </tr>
                   {asmRanking.below && (
                     <tr className="text-white text-lg rounded-lg">
                       <td className="py-2 px-4 text-center">{asmRanking.below.rank}</td>
@@ -279,7 +278,7 @@ export default function HomePage() {
           </span>
         </div>
 
-        {/* Next Match */}
+
         <div className="flex text-center items-center justify-center">
           <span data-aos="fade-up" data-aos-duration="3000" className="block max-w-sm p-6 rounded-lg">
             <h5 className="mb-2 text-4xl font-bold tracking-tight text-white">Next Match</h5>
@@ -309,7 +308,7 @@ export default function HomePage() {
                 </span>
                 <a href="/results"
                   className="w-3/4 h-1/12 inline-flex items-center justify-center px-5 py-3 mx-4 text-base font-medium rounded-lg text-center text-white hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                See results
+                  See results
                 </a>
               </>
             ) : (

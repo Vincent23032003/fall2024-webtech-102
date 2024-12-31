@@ -9,9 +9,9 @@ export default function awardsPage() {
             <h2 className="m-4 text-4xl font-extrabold leading-none tracking-tight text-white">Trophies won</h2>
             <p className="ml-16 text-lg font-normal text-white lg:text-xl xl:px-48 dark:text-white">All the trophies won by ASM are listed on this page. ASM has won numerous trophies, making it a world-renowned team. Unfortunately, ASM has not been able to win many finals, particularly in the French championship. </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-                {/* Card 1 */}
+
                 <div className="w-full h-full bg-white animate-fade-left rounded-lg shadow-md flex flex-col justify-center items-center relative p-6">
-                    {/* Icône */}
+
                     <div className="flex justify-between items-center mb-4">
                         <div className="absolute top-6 left-6">
                             <Image
@@ -24,19 +24,18 @@ export default function awardsPage() {
                             </Image>
                         </div>
 
-                        {/* Grande Information (2x) */}
                         <div className="absolute top-4 right-6 text-9xl font-light text-gray-200">
                             2x
                         </div>
                     </div>
 
-                    {/* Titre */}
+
                     <div className="flex flex-col flex-wrap items-center text-center">
                         <h3 className="text-2xl font-bold text-center text-blue-900 mt-24">
                             FRENCH CHAMPION
                         </h3>
 
-                        {/* Dates */}
+
                         <div className="flex gap-4 flex-col text-xl text-center text-gray-500 mt-4">
                             <p>2010</p>
                             <p>2017</p>
@@ -45,9 +44,9 @@ export default function awardsPage() {
                 </div>
 
 
-                {/* Card 2 */}
+
                 <div className="w-full h-full bg-white animate-fade-left animate-delay-[400ms] rounded-lg shadow-md flex flex-col justify-center items-center relative p-6">
-                    {/* Icône */}
+
                     <div className="grid grid-cols-2 flex items-center justify-center mb-16">
                         <div className="absolute top-6 left-6">
                             <Image
@@ -60,19 +59,18 @@ export default function awardsPage() {
                             </Image>
                         </div>
 
-                        {/* Grande Information (2x) */}
                         <div className="absolute top-4 right-6 text-9xl font-light text-gray-200">
                             3x
                         </div>
                     </div>
 
-                    {/* Titre */}
+
                     <div className="flex flex-col flex-wrap items-center text-center">
                         <h3 className="text-2xl font-bold text-center text-blue-900 mt-24">
                             EUROPEAN CHALLENGE CHAMPION
                         </h3>
 
-                        {/* Dates */}
+
                         <div className="flex gap-4 flex-col text-xl text-center text-gray-500 mt-4">
                             <p>1999</p>
                             <p>2007</p>
@@ -81,9 +79,9 @@ export default function awardsPage() {
                     </div>
                 </div>
 
-                {/* Card 3 */}
+
                 <div className="w-full h-full bg-white animate-fade-left animate-delay-[800ms] rounded-lg shadow-md flex flex-col justify-center items-center relative p-6">
-                    {/* Icône */}
+
                     <div className="grid grid-cols-2 flex items-center justify-center mb-16">
                         <div className="absolute top-6 left-6">
                             <Image
@@ -96,19 +94,18 @@ export default function awardsPage() {
                             </Image>
                         </div>
 
-                        {/* Grande Information (2x) */}
                         <div className="absolute top-4 right-6 text-9xl font-light text-gray-200">
                             3x
                         </div>
                     </div>
 
-                    {/* Titre */}
+
                     <div className="flex flex-col flex-wrap items-center text-center">
                         <h3 className="text-2xl font-bold text-center text-blue-900 mt-24">
                             YVES DU MANOIR CHALLENGE
                         </h3>
 
-                        {/* Dates */}
+
                         <div className="flex gap-4 flex-col text-xl text-center text-gray-500 mt-4">
                             <p>1936</p>
                             <p>1976</p>
@@ -117,9 +114,9 @@ export default function awardsPage() {
                     </div>
                 </div>
 
-                {/* Card 4 */}
+
                 <div className="w-full h-full bg-white animate-fade-left animate-delay-[1200ms] rounded-lg shadow-md flex flex-col justify-center items-center relative p-6">
-                    {/* Icône */}
+
                     <div className="grid grid-cols-2 flex items-center justify-center mb-16">
                         <div className="absolute top-6 left-6">
                             <Image
@@ -132,28 +129,27 @@ export default function awardsPage() {
                             </Image>
                         </div>
 
-                        {/* Grande Information (2x) */}
                         <div className="absolute top-4 right-6 text-9xl font-light text-gray-200">
                             1x
                         </div>
                     </div>
 
-                    {/* Titre */}
+
                     <div className="flex flex-col flex-wrap items-center text-center">
                         <h3 className="text-2xl font-bold text-center text-blue-900 mt-4">
                             LEAGUE CUP
                         </h3>
 
-                        {/* Dates */}
+
                         <div className="flex gap-4 flex-col text-xl text-center text-gray-500 mt-4">
                             <p>2001</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Card 5 */}
+
                 <div className="w-full h-full bg-white animate-fade-left animate-delay-[1600ms] rounded-lg shadow-md flex flex-col justify-center items-center relative p-6">
-                    {/* Icône */}
+
                     <div className="grid grid-cols-2 flex items-center justify-center mb-16">
                         <div className="absolute top-6 left-6">
                             <Image
@@ -165,20 +161,18 @@ export default function awardsPage() {
 
                             </Image>
                         </div>
-
-                        {/* Grande Information (2x) */}
                         <div className="absolute top-4 right-6 text-9xl font-light text-gray-200">
                             12x
                         </div>
                     </div>
 
-                    {/* Titre */}
+
                     <div className="flex flex-col flex-wrap items-center text-center">
                         <h3 className="text-2xl font-bold text-center text-blue-900 mt-24">
                             RUNNER-UP IN FRANCE
                         </h3>
 
-                        {/* Dates */}
+
                         <div className="grid grid-cols-3 gap-2">
                             <div className="flex gap-4 flex-col text-xl text-center text-gray-500 mt-4">
                                 <p>1936</p>
@@ -203,9 +197,9 @@ export default function awardsPage() {
                     </div>
                 </div>
 
-                {/* Card 6 */}
+
                 <div className="w-full h-full bg-white animate-fade-left animate-delay-[2000ms] rounded-lg shadow-md flex flex-col justify-center items-center relative p-6">
-                    {/* Icône */}
+
                     <div className="grid grid-cols-2 flex items-center justify-center mb-16">
                         <div className="absolute top-6 left-6">
                             <Image
@@ -218,19 +212,18 @@ export default function awardsPage() {
                             </Image>
                         </div>
 
-                        {/* Grande Information (2x) */}
                         <div className="absolute top-4 right-6 text-9xl font-light text-gray-200">
                             3x
                         </div>
                     </div>
 
-                    {/* Titre */}
+
                     <div className="flex flex-col flex-wrap items-center text-center">
                         <h3 className="text-2xl font-bold text-center text-blue-900 mt-16">
                             EUROPEAN CUP FINALIST
                         </h3>
 
-                        {/* Dates */}
+
                         <div className="flex gap-4 flex-col text-xl text-center text-gray-500 mt-4">
                             <p>2013</p>
                             <p>2015</p>

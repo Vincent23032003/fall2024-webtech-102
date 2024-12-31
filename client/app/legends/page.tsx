@@ -13,17 +13,17 @@ export default function LegendsPage() {
                 <div className="grid grid-cols-3 gap-8 p-4">
                     <div className="relative h-full w-full rounded-xl overflow-hidden animate-fade-left bg-transparent group">
                         <img
-                            src="/assets/rougerie.png" // Remplacez avec l'image réelle du joueur
+                            src="/assets/rougerie.png"
                             alt="Joueur"
                             className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 w-52 object-cover z-10 rounded-xl"
                         />
 
-                        {/* Badge du rôle */}
+
                         <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
                             Center
                         </div>
 
-                        {/* Nom du joueur */}
+
                         <div className="absolute bottom-6 left-4 z-20 text-white">
                             <h3 className="text-2xl font-semibold">Aurélien ROUGERIE</h3>
                         </div>
@@ -41,19 +41,19 @@ export default function LegendsPage() {
                     </div>
                     <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[400ms] bg-transparent group">
 
-                        {/* Image du joueur */}
+
                         <img
-                            src="/assets/parra.png" // Remplacez avec l'image réelle du joueur
+                            src="/assets/parra.png"
                             alt="Joueur"
                             className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
-                        {/* Badge du rôle */}
+
                         <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-                        Scrum-half
+                            Scrum-half
                         </div>
 
-                        {/* Nom du joueur */}
+
                         <div className="absolute bottom-6 left-4 z-20 text-white">
                             <h3 className="text-2xl font-semibold">Morgan PARRA</h3>
                         </div>
@@ -71,17 +71,16 @@ export default function LegendsPage() {
                     </div>
                     <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[800ms] bg-transparent group">
                         <img
-                            src="/assets/brock.png" // Remplacez avec l'image réelle du joueur
+                            src="/assets/brock.png"
                             alt="Joueur"
                             className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
-                        {/* Badge du rôle */}
+
                         <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-                        Opening half
+                            Opening half
                         </div>
 
-                        {/* Nom du joueur */}
                         <div className="absolute bottom-6 left-4 z-20 text-white">
                             <h3 className="text-2xl font-semibold">James BROCK</h3>
                         </div>
@@ -100,17 +99,17 @@ export default function LegendsPage() {
                     <div
                         className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1200ms] bg-transparent group">
                         <img
-                            src="/assets/cudmore.png" // Remplacez avec l'image réelle du joueur
+                            src="/assets/cudmore.png"
                             alt="Joueur"
                             className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
-                        {/* Badge du rôle */}
+
                         <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-                        2nd line
+                            2nd line
                         </div>
 
-                        {/* Nom du joueur */}
+
                         <div className="absolute bottom-6 left-4 z-20 text-white">
                             <h3 className="text-2xl font-semibold">Jamie CUDMORE</h3>
                         </div>
@@ -128,17 +127,17 @@ export default function LegendsPage() {
                     </div>
                     <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1600ms] bg-transparent group">
                         <img
-                            src="/assets/domingo.png" // Remplacez avec l'image réelle du joueur
+                            src="/assets/domingo.png"
                             alt="Joueur"
                             className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
-                        {/* Badge du rôle */}
+
                         <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-                        Pillar
+                            Pillar
                         </div>
 
-                        {/* Nom du joueur */}
+
                         <div className="absolute bottom-6 left-4 z-20 text-white">
                             <h3 className="text-2xl font-semibold">Thomas DOMINGO</h3>
                         </div>
@@ -157,17 +156,17 @@ export default function LegendsPage() {
 
                     <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[2000ms] bg-transparent group">
                         <img
-                            src="/assets/wesley.png" // Remplacez avec l'image réelle du joueur
+                            src="/assets/wesley.png"
                             alt="Joueur"
                             className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
                         />
 
-                        {/* Badge du rôle */}
+
                         <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-                        Wingman
+                            Wingman
                         </div>
 
-                        {/* Nom du joueur */}
+
                         <div className="absolute bottom-6 left-4 z-20 text-white">
                             <h3 className="text-2xl font-semibold">Wesley FOFANA</h3>
                         </div>

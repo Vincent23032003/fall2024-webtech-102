@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../../supabaseClient";
 import { User } from "@supabase/supabase-js";
-import WysiwygEditor from "../../../components/WysiwygEditor"
+import WysiwygEditor from "../../../components/WysiwygEditor";
 
 export default function NewArticlePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -20,12 +20,12 @@ export default function NewArticlePage() {
     setTextSizeDropdownVisible(!textSizeDropdownVisible);
   };
 
-  // Vérifier l'utilisateur connecté
+
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user }, error } = await supabase.auth.getUser();
       if (error) {
-        console.error("Erreur lors de la récupération de l'utilisateur :", error.message);
+        console.error("User recovery error :", error.message);
         setUser(null);
       } else {
         setUser(user);
@@ -35,29 +35,27 @@ export default function NewArticlePage() {
     checkUser();
   }, []);
 
-  // Fonction pour créer un nouvel article
   const handleCreateArticle = async () => {
     if (!title || !description) {
-      setError("Veuillez remplir tous les champs.");
+      setError("Please complete all fields.");
       return;
     }
-  
-    // Vérification de la longueur du titre
+
     if (title.length > 255) {
-      setError("Le titre ne doit pas dépasser 255 caractères.");
+      setError("The title must not exceed 255 characters.");
       return;
     }
-  
+
     setError(null);
     setLoading(true);
-  
+
     try {
       if (!user) {
-        throw new Error("Utilisateur non connecté.");
+        throw new Error("User not logged in.");
       }
-  
-      const createdDate = new Date().toISOString(); // Générer la date actuelle au format ISO
-  
+
+      const createdDate = new Date().toISOString();
+
       const { data, error } = await supabase
         .from("articles")
         .insert({
@@ -65,37 +63,34 @@ export default function NewArticlePage() {
           description,
           authorid: user.id,
           created_date: createdDate,
-          likes: 0, // Initialiser les likes à 0
-          comments: [], // Initialiser les commentaires comme un tableau vide
+          likes: 0,
+          comments: [],
         })
         .select();
-  
+
       if (error) {
-        // Vérification de messages d'erreur spécifiques retournés par Supabase
         if (error.details && error.details.includes("value too long for type")) {
-          setError("Le titre est trop long. Veuillez limiter à 255 caractères.");
+          setError("The title is too long. Please limit to 255 characters.");
           return;
         }
         throw error;
       }
-  
+
       if (data) {
-        // Rediriger l'utilisateur vers la page du blog après la création
+
         router.push("/blog");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
-        // Afficher le message d'erreur spécifique si disponible
-        setError(err.message || "Erreur lors de la création de l'article.");
+
+        setError(err.message || "Error when creating the article.");
       } else {
-        setError("Une erreur inattendue s'est produite.");
+        setError("An unexpected error has occurred.");
       }
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <main className="max-w-4xl mx-auto h-screen">

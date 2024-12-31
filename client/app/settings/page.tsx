@@ -20,7 +20,7 @@ export default function SettingsPage() {
   const [userDetails, setUserDetails] = useState<any>(null);
   const [formData, setFormData] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const [fetching, setFetching] = useState<boolean>(true); // Ajout pour l'état de chargement initial
+  const [fetching, setFetching] = useState<boolean>(true);
   const [selectedAvatar, setSelectedAvatar] = useState(gravatarList[0]);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
 
@@ -38,7 +38,7 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/connexion"; // Rediriger vers la page de connexion
+    window.location.href = "/connexion";
   };
 
   const validateForm = () => {
@@ -115,10 +115,10 @@ export default function SettingsPage() {
               .from("users")
               .insert({
                 id: authData.user.id,
-                email: authData.user.email || `${authData.user.id}@example.com`, // Email par défaut si manquant
+                email: authData.user.email || `${authData.user.id}@example.com`,
                 username: authData.user.email
                   ? authData.user.email.split("@")[0]
-                  : `user_${authData.user.id.substring(0, 8)}`, // Crée un username basé sur l'ID si l'email est absent
+                  : `user_${authData.user.id.substring(0, 8)}`,
                 avatarUrl: gravatarList[0],
                 created_at: new Date(),
               })
@@ -155,7 +155,7 @@ export default function SettingsPage() {
             avatarUrl: data.avatarUrl || gravatarList[0],
           });
           setSelectedAvatar(data.avatarUrl || gravatarList[0]);
-          
+
         }
       } catch (error) {
         console.error("An error occurred while fetching user:", error);
@@ -255,9 +255,8 @@ export default function SettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className={`w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${
-                    loading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full bg-blue-900 text-white font-medium py-2 px-4 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 >
                   {loading ? "Saving..." : "Save modifications"}
                 </button>

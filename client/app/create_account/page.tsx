@@ -18,7 +18,7 @@ const CreateAccountPage = () => {
   const [birthDate, setBirthDate] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Empêche les clics multiples
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,18 +30,18 @@ const CreateAccountPage = () => {
       setError(null);
       setSuccess(false);
 
-      // Validation de l'email et du mot de passe
+
       if (password.length < 6) {
-        setError("Le mot de passe doit contenir au moins 6 caractères.");
+        setError("The password must contain at least 6 characters.");
         return;
       }
 
       if (!email.includes('@')) {
-        setError("Email invalide.");
+        setError("Email invalid.");
         return;
       }
 
-      // Créer un utilisateur dans Supabase Auth (le mot de passe est géré par Supabase)
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -51,23 +51,23 @@ const CreateAccountPage = () => {
 
       const { user } = data;
 
-      // Hashage du mot de passe avant de l'enregistrer dans la base de données
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Ajouter les données dans la table "users" sans le champ `role`
+
       if (user) {
         const { error: dbError } = await supabase.from("users").insert([
           {
-            id: user.id, // ID généré par Supabase
+            id: user.id,
             email,
             username,
             firstName,
             lastName,
             birthDate,
-            password: hashedPassword, // Mot de passe haché
+            password: hashedPassword,
             updatedAt: new Date(),
             created_at: new Date(),
-            settings: {}, // Paramètres vides par défaut
+            settings: {},
           },
         ]);
 
@@ -82,12 +82,12 @@ const CreateAccountPage = () => {
       setLastName("");
       setBirthDate("");
 
-      // Redirection vers la page de connexion après succès
+
       router.push("/connexion");
     } catch (err: any) {
-      setError(err.message || "Une erreur est survenue.");
+      setError(err.message || "An error has occurred.");
     } finally {
-      setIsSubmitting(false); // Réactiver le bouton après la soumission
+      setIsSubmitting(false);
     }
   };
 
@@ -116,7 +116,7 @@ const CreateAccountPage = () => {
           </div>
         </div>
         <form onSubmit={handleSubmit}>
-          {/* Champ pour le nom complet */}
+          {/* Field for full name */}
           <div className="mb-4">
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
               Username
@@ -126,7 +126,7 @@ const CreateAccountPage = () => {
               type="text"
               placeholder="Momo"
               value={username}
-              onChange={(e) => setUsername(e.target.value)} // Met à jour uniquement `firstName`
+              onChange={(e) => setUsername(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               required
             />
@@ -140,7 +140,7 @@ const CreateAccountPage = () => {
               type="text"
               placeholder="Morgan"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)} // Met à jour uniquement `firstName`
+              onChange={(e) => setFirstName(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               required
             />
@@ -154,7 +154,7 @@ const CreateAccountPage = () => {
               type="text"
               placeholder="Parra"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)} // Met à jour uniquement `lastName`
+              onChange={(e) => setLastName(e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               required
             />
@@ -205,7 +205,7 @@ const CreateAccountPage = () => {
           <button
             type="submit"
             className="w-full bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
-            disabled={isSubmitting} // Désactiver le bouton si en cours de soumission
+            disabled={isSubmitting}
           >
             {isSubmitting ? "Creation in progress..." : "Create account"}
           </button>

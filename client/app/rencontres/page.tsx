@@ -17,7 +17,7 @@ type Match = {
 export default function PreviousMatchesPage() {
   const [previousMatches, setPreviousMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // Utilisation de useRouter pour la navigation
+  const router = useRouter();
 
 
   // Fetch data from Supabase
@@ -27,7 +27,7 @@ export default function PreviousMatchesPage() {
         const { data: matchesData, error: matchesError } = await supabase
           .from("matches")
           .select("*")
-          .lt("week_number", 13) // Récupère les matchs des semaines avant la semaine 13
+          .lt("week_number", 13)
           .order("week_number", { ascending: false })
           .order("match_date", { ascending: true });
 
@@ -46,7 +46,7 @@ export default function PreviousMatchesPage() {
     fetchPreviousMatches();
   }, []);
 
-  // Grouper les matchs par semaine
+
   const matchesByWeek = previousMatches.reduce((acc: { [key: number]: Match[] }, match) => {
     if (!acc[match.week_number]) {
       acc[match.week_number] = [];
@@ -62,7 +62,7 @@ export default function PreviousMatchesPage() {
       {loading ? (
         <p className="h-screen text-white">Loading...</p>
       ) : previousMatches.length === 0 ? (
-        <p className="text-white">Aucun match trouvé pour les semaines précédentes.</p>
+        <p className="h-screen text-white">No matches found for previous weeks.</p>
       ) : (
         Object.entries(matchesByWeek).map(([weekNumber, matches]) => (
           <section key={weekNumber} className="mb-8">

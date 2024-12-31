@@ -32,7 +32,7 @@ export default function ResultsPage() {
   const [standings, setStandings] = useState<Team[]>([]);
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // Utilisation de useRouter pour la navigation
+  const router = useRouter();
 
   // Fetch data from Supabase
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function ResultsPage() {
         const { data: upcomingMatchesData, error: upcomingMatchesError } = await supabase
           .from("matches")
           .select("*")
-          .eq("week_number", 13) // Prochaines rencontres
+          .eq("week_number", 13)
           .order("match_date", { ascending: true });
 
         if (upcomingMatchesError) {

@@ -13,17 +13,17 @@ export default function LegendsPage() {
         <div className="grid grid-cols-3 gap-8 p-4">
           <div className="relative h-full w-full rounded-xl overflow-hidden animate-fade-left bg-transparent group">
             <img
-              src="/assets/falgoux.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/falgoux.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 w-52 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Pillar
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Etienne FALGOUX</h3>
             </div>
@@ -40,19 +40,19 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[400ms] bg-transparent group">
 
-            {/* Image du joueur */}
+
             <img
-              src="/assets/faingaa.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/faingaa.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
-            Heeler
+              Heeler
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Folau FAINGA'A</h3>
             </div>
@@ -69,17 +69,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[800ms] bg-transparent group">
             <img
-              src="/assets/montagne.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/montagne.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Pillar
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Régis MONTAGNE</h3>
             </div>
@@ -97,17 +97,17 @@ export default function LegendsPage() {
           <div
             className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1200ms] bg-transparent group">
             <img
-              src="/assets/yato.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/yato.png"
               alt="Joueur"
               className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               3rd line
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Peceli YATO</h3>
             </div>
@@ -124,17 +124,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1600ms] bg-transparent group">
             <img
-              src="/assets/ceyte.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/ceyte.png"
               alt="Joueur"
               className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               2nd line
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Thomas CEYTE</h3>
             </div>
@@ -151,17 +151,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[2000ms] bg-transparent group">
             <img
-              src="/assets/fischer.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/fischer.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               3rd line
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Alexandre FISCHER</h3>
             </div>
@@ -178,17 +178,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1600ms] bg-transparent group">
             <img
-              src="/assets/lee.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/lee.png"
               alt="Joueur"
               className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               3rd line
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Fritz LEE</h3>
             </div>
@@ -206,17 +206,17 @@ export default function LegendsPage() {
 
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[2000ms] bg-transparent group">
             <img
-              src="/assets/kremer.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/kremer.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               3rd line
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Marcos KREMER</h3>
             </div>
@@ -233,17 +233,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative h-full w-full rounded-xl overflow-hidden animate-fade-left bg-transparent group">
             <img
-              src="/assets/bezy.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/bezy.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 w-52 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Scrum-half
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Sébastien BEZY</h3>
             </div>
@@ -260,19 +260,19 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[400ms] bg-transparent group">
 
-            {/* Image du joueur */}
+
             <img
-              src="/assets/urdapilleta.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/urdapilleta.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Opening-half
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Benjamin URDAPILLETA</h3>
             </div>
@@ -289,17 +289,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[800ms] bg-transparent group">
             <img
-              src="/assets/jurand.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/jurand.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Rear
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Joris JURAND</h3>
             </div>
@@ -317,17 +317,17 @@ export default function LegendsPage() {
           <div
             className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1200ms] bg-transparent group">
             <img
-              src="/assets/moala.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/moala.png"
               alt="Joueur"
               className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Center
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">George MOALA</h3>
             </div>
@@ -344,17 +344,17 @@ export default function LegendsPage() {
           </div>
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1600ms] bg-transparent group">
             <img
-              src="/assets/darricarrere.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/darricarrere.png"
               alt="Joueur"
               className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Center
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Léon DARRICARRERE</h3>
             </div>
@@ -372,17 +372,17 @@ export default function LegendsPage() {
 
           <div className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[2000ms] bg-transparent group">
             <img
-              src="/assets/tauzin.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/tauzin.png"
               alt="Joueur"
               className="absolute h-3/4 top-10 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Wingman
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Lucas TAUZIN</h3>
             </div>
@@ -400,17 +400,17 @@ export default function LegendsPage() {
           <div
             className="relative w-full h-96 rounded-xl overflow-hidden animate-fade-left animate-delay-[1200ms] bg-transparent group">
             <img
-              src="/assets/newsome.png" // Remplacez avec l'image réelle du joueur
+              src="/assets/newsome.png"
               alt="Joueur"
               className="absolute top-10 h-3/4 left-1/2 -translate-x-1/2 object-cover z-10 rounded-xl"
             />
 
-            {/* Badge du rôle */}
+
             <div className="absolute top-4 left-4 bg-white/20 text-white px-3 py-1 rounded-full text-sm z-20 font-medium shadow-md backdrop-blur-sm">
               Rear
             </div>
 
-            {/* Nom du joueur */}
+
             <div className="absolute bottom-6 left-4 z-20 text-white">
               <h3 className="text-2xl font-semibold">Alex NEWSOME</h3>
             </div>

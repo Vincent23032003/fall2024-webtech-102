@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../supabaseClient";
 import { UUID } from "crypto";
-import { User } from "@supabase/supabase-js"; // Import du type User
+import { User } from "@supabase/supabase-js";
 
 type Article = {
   id: string;
@@ -12,7 +12,7 @@ type Article = {
   description: string;
   authorid: UUID;
   likes: number;
-  comment_count: number; // Nouveau champ pour le nombre de commentaires
+  comment_count: number;
   created_date: string;
   users: {
     username: string;
@@ -32,7 +32,7 @@ export default function BlogPage() {
   const [totalPages, setTotalPages] = useState(0);
   const articlesPerPage = 5;
 
-  // Vérifier l'utilisateur connecté
+
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -42,7 +42,7 @@ export default function BlogPage() {
     checkUser();
   }, []);
 
-  // Récupérer les articles avec le nombre de commentaires
+
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
@@ -69,8 +69,8 @@ export default function BlogPage() {
           .range(offset, offset + articlesPerPage - 1);
 
         if (error) {
-          console.error("Erreur lors de la récupération des articles :", error.message);
-          setError("Impossible de charger les articles. Veuillez réessayer plus tard.");
+          console.error("Error retrieving items :", error.message);
+          setError("Unable to load items. Please try again later.");
           return;
         }
 
@@ -83,8 +83,8 @@ export default function BlogPage() {
         setArticles(articlesWithCommentCount as Article[]);
         setTotalPages(Math.ceil((count ?? 0) / articlesPerPage));
       } catch (error) {
-        console.error("Erreur inattendue lors de la récupération des articles :", error);
-        setError("Impossible de charger les articles. Veuillez réessayer plus tard.");
+        console.error("Unexpected error when retrieving items:", error);
+        setError("Unable to load items. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -193,7 +193,7 @@ export default function BlogPage() {
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : articles.length === 0 ? (
-        <p className="text-white">Aucun article disponible pour le moment.</p>
+        <p className="text-white">No items available at the moment.</p>
       ) : (
         <div className="space-y-8">
           {articles
@@ -208,7 +208,7 @@ export default function BlogPage() {
               >
                 <h2 className="text-2xl font-bold text-gray-800">{article.title}</h2>
                 <p className="text-sm text-gray-500">
-                  Publié le{" "}
+                  Publish on{" "}
                   {new Date(article.created_date).toLocaleDateString()} par{" "}
                   {article.users?.username || "Auteur inconnu"}
                 </p>
@@ -256,7 +256,7 @@ export default function BlogPage() {
                     onClick={() => router.push(`/articles/${article.id}`)}
                     className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                   >
-                    Lire l'article
+                    Read the article
                   </button>
                   {user?.id === article.authorid && (
                     <>
@@ -264,7 +264,7 @@ export default function BlogPage() {
                         onClick={() => router.push(`/blog/edit/${article.id}`)}
                         className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                       >
-                        Modifier
+                        Modify
                       </button>
                       <button
                         onClick={async () => {
@@ -276,7 +276,7 @@ export default function BlogPage() {
                               .from("articles")
                               .delete()
                               .eq("id", article.id);
-  
+
                             if (!error) {
                               setArticles((prev) =>
                                 prev.filter((a) => a.id !== article.id)
@@ -286,7 +286,7 @@ export default function BlogPage() {
                         }}
                         className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                       >
-                        Supprimer
+                        Delete
                       </button>
                     </>
                   )}
@@ -296,25 +296,23 @@ export default function BlogPage() {
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={handlePrevPage}
-              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
-                currentPage === 1
+              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === 1
                   ? "cursor-not-allowed opacity-50"
                   : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-              }`}
+                }`}
               disabled={currentPage === 1}
             >
               Previous
             </button>
             <span className="text-xl font-bold text-white">
-              Page {currentPage} sur {totalPages}
+              Page {currentPage} on {totalPages}
             </span>
             <button
               onClick={handleNextPage}
-              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${
-                currentPage === totalPages
+              className={`flex items-center justify-center w-1/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg ${currentPage === totalPages
                   ? "cursor-not-allowed opacity-50"
                   : "hover:text-yellow-400 border hover:border-yellow-400 border-2"
-              }`}
+                }`}
               disabled={currentPage === totalPages}
             >
               Next
