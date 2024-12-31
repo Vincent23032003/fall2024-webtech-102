@@ -189,7 +189,7 @@ export default function BlogPage() {
         )}
       </div>
       {loading ? (
-        <p className="text-white text-lg">Loading...</p>
+        <p className="h-screen text-white text-lg">Loading...</p>
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : articles.length === 0 ? (
@@ -262,7 +262,7 @@ export default function BlogPage() {
                     <>
                       <button
                         onClick={() => router.push(`/blog/edit/${article.id}`)}
-                        className="w-2/12 h-1/12 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                        className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                       >
                         Modifier
                       </button>
@@ -284,7 +284,7 @@ export default function BlogPage() {
                             }
                           }
                         }}
-                        className="w-2/12 h-1/12 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                        className="w-2/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
                       >
                         Supprimer
                       </button>

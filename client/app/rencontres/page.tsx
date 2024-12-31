@@ -60,7 +60,7 @@ export default function PreviousMatchesPage() {
       <h1 className="text-3xl font-bold text-white mb-6">Previous games</h1>
 
       {loading ? (
-        <p className="text-white">Loading...</p>
+        <p className="h-screen text-white">Loading...</p>
       ) : previousMatches.length === 0 ? (
         <p className="text-white">Aucun match trouvé pour les semaines précédentes.</p>
       ) : (

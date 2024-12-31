@@ -50,14 +50,14 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="h-screen text center text-2xl text-white">Loading...</p>;
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Article</h1>
+    <div className="h-screen max-w-3xl mx-auto p-6">
+      <h1 className="text-4xl text-white font-bold mb-4">Edit your article</h1>
       <div className="mb-4">
-        <label className="block mb-1 text-gray-700">Title</label>
+        <label className="block mb-1 text-white">Title</label>
         <input
           type="text"
           value={title}
@@ -66,7 +66,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
         />
       </div>
       <div className="mb-4">
-        <label className="block mb-1 text-gray-700">Description</label>
+        <label className="block mb-1 text-white">Description</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -76,10 +76,10 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       </div>
       <button
         onClick={handleUpdate}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="w-3/12 h-1/12 bg-blue-900 text-white px-4 py-2 rounded-lg hover:text-yellow-400 border hover:border-yellow-400 border-2"
       >
         Update Article
       </button>
-    </main>
+    </div>
   );
 }

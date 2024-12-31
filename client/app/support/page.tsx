@@ -5,7 +5,7 @@ import '../../styles/globals.css';
 
 export default function Page() {
   return (
-    <div className="p-6">
+    <div className="h-screen p-6">
       <h2 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-white">Support page</h2>
       <p className="mb-6 text-lg font-normal text-white lg:text-xl xl:px-48 dark:text-white">We will be glad to answer any questions or suggestions about this project! </p>
 

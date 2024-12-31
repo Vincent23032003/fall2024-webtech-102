@@ -171,7 +171,7 @@ export default function SettingsPage() {
     <main>
       {fetching ? (
         <div className="flex items-center justify-center h-screen">
-          <p className="text-2xl text-gray-700">Loading...</p>
+          <p className="text-2xl text-white">Loading...</p>
         </div>
       ) : !user ? (
         <div className="flex flex-col items-center mt-20 h-screen text-center">

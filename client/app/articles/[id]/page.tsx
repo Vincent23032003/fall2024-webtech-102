@@ -330,7 +330,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   
 
   if (loading) {
-    return <p className="text-center text-gray-500">Loading article...</p>;
+    return <p className="h-screen text-center text-white">Loading article...</p>;
   }
 
   if (!article) {

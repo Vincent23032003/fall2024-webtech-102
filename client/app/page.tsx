@@ -119,7 +119,7 @@ export default function HomePage() {
       <div className="grid place-items-start flex justify-center">
         <div className="mt-24 mx-2 text-center">
           <h1 className="mb-4 mt-10 text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl lg:text-6xl animate-fade-left dark:text-white">
-            Join the ASM Movement! Support, Connect, Celebrate all together
+            Join the ASM Movement ! Support, Connect, Celebrate all together
           </h1>
           <p className="mb-6 text-lg font-normal text-white lg:text-xl sm:px-16 xl:px-48 animate-fade-left animate-delay-[400ms] dark:text-white">
             Here is the ASM website, the ultimate hub for the ASM fans! Stay connected with your ASM latest updates, engage with the community, and celebrate the spirit of the game together.
@@ -222,6 +222,10 @@ export default function HomePage() {
                     />
                   </div>
                 </span>
+                <a href="/results"
+                  className="w-1/2 h-1/12 inline-flex items-center justify-center px-5 py-3 mx-4 text-base font-medium rounded-lg text-center text-white hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                See results
+                </a>
               </>
             ) : (
               <p className="text-white">Loading...</p>
@@ -303,6 +307,10 @@ export default function HomePage() {
                     />
                   </div>
                 </span>
+                <a href="/results"
+                  className="w-3/4 h-1/12 inline-flex items-center justify-center px-5 py-3 mx-4 text-base font-medium rounded-lg text-center text-white hover:text-yellow-400 border border-white hover:border-yellow-400 hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                See results
+                </a>
               </>
             ) : (
               <p className="text-white">Loading...</p>

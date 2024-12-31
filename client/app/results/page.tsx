@@ -86,7 +86,7 @@ export default function ResultsPage() {
       <h1 className="text-3xl font-bold text-white mb-6">Top 14 Results & Standings</h1>
 
       {loading ? (
-        <p className="text-white">Loading...</p>
+        <p className="h-screen text-white">Loading...</p>
       ) : (
         <>
           {/* Classement */}
