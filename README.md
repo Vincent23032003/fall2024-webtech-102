@@ -163,18 +163,6 @@ http://localhost:3000
 
 ---
 
-### Bonus Tasks
-
-#### Task Title 1
-- **Grade:** X/X
-- **Comments:** Description of how the task was implemented.
-
-#### Task Title 2
-- **Grade:** X/X
-- **Comments:** Description of how the task was implemented.
-
----
-
 ### Miscellaneous
 
 #### Course Feedback
