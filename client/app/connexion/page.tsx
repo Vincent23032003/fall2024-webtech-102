@@ -52,9 +52,11 @@ const ConnexionPage = () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "github",
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
+        options: {
+          redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL || `${window.location.origin}/auth/callback`,
+        },
       });
-
+  
       if (error) {
         console.error("GitHub login error:", error.message);
         setError("Erreur lors de la connexion avec GitHub.");
@@ -64,6 +66,7 @@ const ConnexionPage = () => {
       setError("Une erreur est survenue avec GitHub.");
     }
   };
+  
 
   return (
     <div className="h-screen">
